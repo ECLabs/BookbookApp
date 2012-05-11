@@ -2,3 +2,7 @@ tmp
 *.class
 *.pyc
 *.pyo
+build
+build
+build/android
+build/iphone
