@@ -15,7 +15,7 @@
     </deployment-targets>
     <sdk-version>2.0.1.GA2</sdk-version>
     <id>com.evanschambers.bookbook</id>
-    <name>BookbookApp</name>
+    <name>BookUp</name>
     <version>1.0</version>
     <publisher>mindstate</publisher>
     <url>http://www.evanschambers.com</url>
