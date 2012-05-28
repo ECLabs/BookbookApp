@@ -16,118 +16,65 @@ var logo = Titanium.UI.createImageView({
 var data = [];
 var row = Titanium.UI.createTableViewRow();
 var usernameField = Titanium.UI.createTextField({ 
-	color:'#000', 
-	height:30, 
+	color:'#000',  
 	width: Ti.Platform.displayCaps.platformWidth - 30,
-	hintText: "Required",
+	hintText: "Username",
 	font:{fontSize:'14px:'},
 	keyboardType: Titanium.UI.KEYBOARD_EMAIL,
 	autocorrect:false,
-	paddingLeft:90,
 	opacity:1
 });
 row.add(usernameField);
 data.push(row);
 
-
-var usernameLabel = Titanium.UI.createLabel({
-	color:'#ba4f00',
-	text:'Username',
-	font:{fontWeight:'bold', fontSize:'10px'},
-	textAlign:'right',
-	left: 5,
-	width:'75px',
-	opacity:1
-});
-usernameField.add(usernameLabel);
-
 // password
 var rowPassword = Titanium.UI.createTableViewRow();
 var passwordField = Titanium.UI.createTextField({ 
 	color:'#000', 
-	height:30, 
 	width: Ti.Platform.displayCaps.platformWidth - 30,
 	//borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
 	font:{fontSize:'14px:'}, 
-	hintText: "Required",
+	hintText: "Password",
 	keyboardToolbarColor: '#999', 
 	keyboardToolbarHeight: 40,
 	keyboardType: Titanium.UI.KEYBOARD_EMAIL,
-	paddingLeft:90,
 	opacity:1,
 	passwordMask:true,
 });
 rowPassword.add(passwordField);
-
-var passwordLabel = Titanium.UI.createLabel({
-	color:'#ba4f00',
-	text:'Password',
-	font:{fontWeight:'bold', fontSize:'10px'},
-	textAlign:'right',
-	left: 5,
-	width:'75px',
-	opacity:1
-}); 
-passwordField.add(passwordLabel);
 data.push(rowPassword);
 
 // firstname
 var rowFirstname = Titanium.UI.createTableViewRow();
 var firstnameField = Titanium.UI.createTextField({ 
 	color:'#000', 
-	height:30, 
 	width: Ti.Platform.displayCaps.platformWidth - 30,
 	//borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED, 
 	font:{fontSize:'14px:'},
-	hintText: "Required",
+	hintText: "First Name",
 	keyboardToolbarColor: '#999', 
 	keyboardToolbarHeight: 40,
 	keyboardType: Titanium.UI.KEYBOARD_EMAIL,
-	paddingLeft:90,
 	opacity:1
 });
 rowFirstname.add(firstnameField);
 data.push(rowFirstname);
 
-var firstnameLabel = Titanium.UI.createLabel({
-	color:'#ba4f00',
-	text:'First Name',
-	font:{fontWeight:'bold', fontSize:'10px'},
-	textAlign:'right',
-	left: 5,
-	width:'75px',
-	opacity:1
-}); 
-firstnameField.add(firstnameLabel);
-
 // lastname
 var rowLastname = Titanium.UI.createTableViewRow();
 var lastnameField = Titanium.UI.createTextField({ 
 	color:'#000', 
-	height:30, 
 	width: Ti.Platform.displayCaps.platformWidth - 30,
 	//borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
 	font:{fontSize:'14px:'},
-	hintText: "Required", 
+	hintText: "Last Name", 
 	keyboardToolbarColor: '#999', 
 	keyboardToolbarHeight: 40,
 	keyboardType: Titanium.UI.KEYBOARD_EMAIL,
-	paddingLeft:90,
 	opacity:1
 });
 rowLastname.add(lastnameField);
 data.push(rowLastname);
-
-var lastnameLabel = Titanium.UI.createLabel({
-	color:'#ba4f00',
-	text:'Last Name',
-	font:{fontWeight:'bold', fontSize:'10px'},
-	textAlign:'right',
-	left: 5,
-	width:'75px',
-	opacity:1
-}); 
-lastnameField.add(lastnameLabel);
 
 var signUpBtn = Titanium.UI.createButton({
 	title:'Sign Up',
@@ -138,7 +85,7 @@ var signUpBtn = Titanium.UI.createButton({
 	borderColor: '#fff',
 	backgroundImage:'../images/BUTT_grn_off.png',
 	height: 30,
-	width: Ti.Platform.displayCaps.platformWidth - 30,
+	width: 100,
 	backgroundImage: 'none',
 	backgroundColor: '#feba86',
 	opacity:1,
@@ -150,8 +97,9 @@ view.add(signUpBtn);
 var tableView = Titanium.UI.createTableView({
 	data:data,
 	style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
-	//headerTitle:'Sign-up',
+	headerTitle:'Sign-up',
 	footerView:view,
+	rowHeight:40,
 	backgroundImage:'../images/login_backgroundonly.png'
 });
 
@@ -211,7 +159,7 @@ var closeBtn = Titanium.UI.createButton({
 	borderRadius: 10,
 	borderColor: '#fff',
 	height: 30,
-	width: Ti.Platform.displayCaps.platformWidth - 30,
+	width: 120,
 	backgroundImage: 'none',
 	backgroundColor: '#feba86',
 	top:35,
@@ -228,7 +176,7 @@ var save = Titanium.UI.createButton({
 	systemButton:Titanium.UI.iPhone.SystemButton.SAVE
 });
 
-Titanium.UI.currentWindow.setRightNavButton(save);
+//Titanium.UI.currentWindow.setRightNavButton(save);
 
 save.addEventListener('click',function(e) { 
 	Titanium.API.info("You clicked the button"); 
@@ -255,6 +203,10 @@ save.addEventListener('click',function(e) {
 	    	alert("User added!");
 	    	win.close();
 	    }
+	};
+	
+	xhr.onerror = function(e) {
+		alert("ERROR " + e.error);
 	};
 
 	Ti.API.debug(url);

@@ -211,4 +211,17 @@ searchBar.addEventListener('change', function(e)
 tableView.addEventListener('click', function(e)
 {
 	Ti.API.debug('click row: ' + e.row.className)
-})
+});
+
+// add a done button to the right nav bar
+var done = Titanium.UI.createButton({
+	systemButton:Titanium.UI.iPhone.SystemButton.DONE
+});
+done.addEventListener('click', function()
+{
+	win.close();
+});
+/**
+ * This doesn't work on Android'
+ */
+//win.setRightNavButton(done);

@@ -21,7 +21,7 @@ view.add(errorLabel);
 var usernameField = Titanium.UI.createTextField({ 
 	color:'#000', 
 	top:errorLabel.top + errorLabel.height + 5,
-	height:30, 
+	//height:30, 
 	width: GLOBAL_BUTTON_WIDTH,
 	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED, 
 	keyboardType: Titanium.UI.KEYBOARD_EMAIL,
@@ -45,15 +45,23 @@ usernameField.addEventListener('blur', function() {
 */
 
 usernameField.addEventListener('return',function(e) { 
-	if(usernameField.value != '' && passwordField.value != '')
+	if(usernameField.value != '' && passwordField.value != '') {
 		loginBtn.fireEvent('click');
+	}
+	else if(usernameField.value != '') {
+		passwordField.focus();
+	}
+		
 });
 
+var passwordFieldTop = 45;
+if (Ti.Platform.osname != 'android') {
+	passwordFieldTop = 37
+}
 
 var passwordField = Titanium.UI.createTextField({ 
 	color:'#000', 
-	top:usernameField.top + usernameField.height + 5,
-	height:30, 
+	top:usernameField.top + passwordFieldTop,
 	width: GLOBAL_BUTTON_WIDTH,
 	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED, 
 	keyboardToolbarColor: '#999', 
@@ -90,7 +98,7 @@ var forgotPWLabel = Titanium.UI.createLabel({
 	textAlign:'right',
 	width:GLOBAL_BUTTON_WIDTH,
 	height:30,
-	top: passwordField.top + passwordField.height + 5,
+	top: passwordField.top + 36,
 	opacity:1
 }); 
 view.add(forgotPWLabel);
@@ -117,8 +125,9 @@ view.add(loginBtn);
 
 
 loginBtn.addEventListener('click',function(e) { 
-	Titanium.API.info("You clicked the button"); 
+	Titanium.API.debug("You clicked the button"); 
 	if(!usernameField.value || !passwordField.value) {
+		Ti.API.debug("missing data in fields");
 		var alertDialog = Titanium.UI.createAlertDialog({
 		    title: 'Sign-in Error',
 		    message: 'Please enter both username and password',
@@ -161,8 +170,16 @@ loginBtn.addEventListener('click',function(e) {
 	    		passwordField.setBackgroundColor('red');
 	    		passwordField.focus();
 	    	}
+	    	else {
+	    		
+	    	}
 	    	
 	    }
+	};
+	
+	xhr.onerror = function(e) {
+		errorLabel.text = 'unable to reach bookup services';
+		alert("ERROR " + e.error);
 	};
 
 	Ti.API.debug(url);
@@ -198,7 +215,7 @@ var signUpBtn = Titanium.UI.createButton({
 	font:{fontSize:12,fontFamily:'Helvetica Neue', fontWeight:'bold'},
 	borderRadius: 5,
 	borderColor: '#fff',
-	height: 22,
+	height: 35,
 	width: GLOBAL_BUTTON_WIDTH - 70,
 	backgroundImage: 'none',
 	backgroundColor: '#feba86',
