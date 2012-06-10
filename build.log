@@ -1,14 +1,33 @@
 Logfile initialized
-[INFO] logfile = /Users/mindstate/Documents/Titanium Studio Workspace/BookUp/build.log
-[DEBUG] /Library/Application Support/Titanium/mobilesdk/osx/2.0.1.GA2/android/builder.py simulator BookUp /Users/mindstate/devenv/android-sdk-macosx /Users/mindstate/Documents/Titanium Studio Workspace/BookUp com.evanschambers.bookbook 8 HVGA 
+[INFO] logfile = /Users/ryangross/Documents/Titanium Studio Workspace/BookbookApp/build.log
+[DEBUG] /Users/ryangross/Library/Application Support/Titanium/mobilesdk/osx/2.0.1.GA2/android/builder.py simulator BookUp /Users/ryangross /Users/ryangross/Documents/Titanium Studio Workspace/BookbookApp com.evanschambers.bookbook 16 WVGA854 
 [INFO] Building BookUp for Android ... one moment
 [INFO] Titanium SDK version: 2.0.1 (04/12/12 16:33 999c68a)
 [DEBUG] Waiting for device to be ready ...
-[TRACE] adb devices returned 0 devices/emulators
-[TRACE] adb devices returned 0 devices/emulators
-[TRACE] adb devices returned 0 devices/emulators
-[TRACE] adb devices returned 0 devices/emulators
-[TRACE] adb devices returned 0 devices/emulators
-[TRACE] adb devices returned 0 devices/emulators
-[ERROR] Timed out waiting for emulator to be ready, you may need to close the emulator and try again
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[DEBUG] Device connected... (waited 30 seconds)
+[DEBUG] waited 30.216167 seconds on emulator to get ready
+[INFO] Waiting for the Android Emulator to become available
+[DEBUG] com.evanschambers.bookbook installed? True
+[INFO] Fastdev server running, deploying in Fastdev mode
+[INFO] Copying CommonJS modules...
+[INFO] Copying project resources..
+[TRACE] COPYING MODIFIED FILE: /Users/ryangross/Documents/Titanium Studio Workspace/BookbookApp/Resources/main_windows/me.js => /Users/ryangross/Documents/Titanium Studio Workspace/BookbookApp/build/android/bin/assets/Resources/main_windows/me.js
+[INFO] Tiapp.xml unchanged, skipping class generation
+[DEBUG] Processing Android resource drawables
+[DEBUG] found drawable-long-land-hdpi splash screen at /Users/ryangross/Documents/Titanium Studio Workspace/BookbookApp/Resources/android/images/res-long-land-hdpi/default.png
+[DEBUG] found drawable-long-land-ldpi splash screen at /Users/ryangross/Documents/Titanium Studio Workspace/BookbookApp/Resources/android/images/res-long-land-ldpi/default.png
+[DEBUG] found drawable-long-port-hdpi splash screen at /Users/ryangross/Documents/Titanium Studio Workspace/BookbookApp/Resources/android/images/res-long-port-hdpi/default.png
+[DEBUG] found drawable-long-port-ldpi splash screen at /Users/ryangross/Documents/Titanium Studio Workspace/BookbookApp/Resources/android/images/res-long-port-ldpi/default.png
+[INFO] Waiting for SDCard to become available..
+[INFO] Re-launching application ... BookUp
+[INFO] Launching application ... BookUp
+[TRACE] Launch output: Starting: Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.evanschambers.bookbook/.BookupActivity }
+
 [INFO] Android Emulator has exited

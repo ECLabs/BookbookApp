@@ -54,6 +54,9 @@ searchBar.addEventListener('return', function(e) {
 			var row = Titanium.UI.createTableViewRow({height:'auto', backgroundColor:'#f00'});
 			row.add(bookRowView);
 			rowData[i] = row;
+			
+			rowData[0] = row.add(bookRowView.add(searchBar));
+			
 	    }
 	    
 	    for(i =0; i < jsonObject.length; i++)
