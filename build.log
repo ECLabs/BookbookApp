@@ -12,7 +12,7 @@ Logfile initialized
 [TRACE] adb devices returned 1 devices/emulators
 [TRACE] adb devices returned 1 devices/emulators
 [DEBUG] Device connected... (waited 30 seconds)
-[DEBUG] waited 30.216167 seconds on emulator to get ready
+[DEBUG] waited 30.304957 seconds on emulator to get ready
 [INFO] Waiting for the Android Emulator to become available
 [DEBUG] com.evanschambers.bookbook installed? True
 [INFO] Fastdev server running, deploying in Fastdev mode

@@ -2,8 +2,10 @@ var win = Ti.UI.currentWindow;
   
 var tableView = Titanium.UI.createTableView({width: 'auto'});
 
+var count = 0;
+
 var searchBar = Titanium.UI.createSearchBar({
-	top:0,
+	top:56,
 	height: 40,
 	autocorrect: false,
 	hintText: 'Enter a title to find the book'
@@ -55,7 +57,7 @@ searchBar.addEventListener('return', function(e) {
 			row.add(bookRowView);
 			rowData[i] = row;
 			
-			rowData[0] = row.add(bookRowView.add(searchBar));
+			//rowData[0] = row.add(bookRowView.add(searchBar));
 			
 	    }
 	    
@@ -69,6 +71,7 @@ searchBar.addEventListener('return', function(e) {
 	    	var author = v.author
 	    	var description = v.description
 	    	var isbn = v.isbn10
+	    	count++
 	    	
 	    	Ti.API.debug(smallThumbnail);
 	    	Ti.API.debug(thumbnail);
@@ -168,8 +171,9 @@ searchBar.addEventListener('return', function(e) {
 });
 //Create the scroll area, all our content goes in here  
 var scrollArea = Titanium.UI.createScrollView({  
-    top: 40,   
-    contentHeight: 'auto',
+    top: 95,   
+    contentHeight: (count * 70),
+    height: (Ti.Platform.displayCaps.platformHeight - 152),
     showVerticalScrollIndicator: true,
     backgroundColor: '#fff'
 }); 
