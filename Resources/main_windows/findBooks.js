@@ -17,7 +17,7 @@ searchBar.addEventListener('return', function(e) {
 	
 	Titanium.API.info("You clicked the button");
 	var jsonTextToDisplay = '';
-	var url = 'http://'+host+':8080/Bookbook/book/external?title=' + searchBar.value + '&page=0';
+	var url = 'http://'+host+':8080/Bookbook/api/book/external?title=' + searchBar.value + '&page=0';
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.onload = function() {
 		Titanium.API.info(' Text: ' + this.responseText);

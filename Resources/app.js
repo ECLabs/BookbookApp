@@ -64,17 +64,29 @@ tabGroup.addTab(tab2);
 /**
  * 	This login window runs first.  The tab group opens when login window closes
  */
-
 var loginWin = Ti.UI.createWindow({
 	url:'main_windows/login.js',
 	height:Ti.Platform.displayCaps.platformHeight,  
     width:Ti.Platform.displayCaps.platformWidth,  
     fullscreen:false,  
-    navBarHidden:false,
+    navBarHidden:true,
+    tabBarHidden:true,
     title:'Login'
 });
 
-loginWin.open();
+var tabGroupHidden = Ti.UI.createTabGroup();
+
+var tab = Ti.UI.createTab({
+    title:"Doesn't matter",
+    window: loginWin
+});
+ 
+tabGroupHidden.addTab(tab);
+tabGroupHidden.open();
+	
+
+
+//loginWin.open();
 
 
 loginWin.addEventListener('close', function() {

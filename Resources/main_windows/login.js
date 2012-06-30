@@ -141,7 +141,7 @@ loginBtn.addEventListener('click',function(e) {
 	var jsonTextToDisplay = '';
 	var host = 'labs.evanschambers.com'; // 'localhost';
 	Ti.API.debug("about to send.  usernane field value -> " + usernameField.value)
-	var url = 'http://'+host+':8080/Bookbook/user/sign-in?username='+usernameField.value+'&password='+ passwordField.value;
+	var url = 'http://'+host+':8080/Bookbook/api/user/sign-in?username='+usernameField.value+'&password='+ passwordField.value;
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.onload = function() {
 		//Titanium.API.info(' Text: ' + this.responseText);
@@ -223,26 +223,41 @@ var signUpBtn = Titanium.UI.createButton({
 });
 view.add(signUpBtn);
 
+var tabGroup = Ti.UI.createTabGroup();
+
 signUpBtn.addEventListener('click', function() {
+	
 	var signUpWin = Titanium.UI.createWindow({
 		url:'signUp.js',  
 	    //height:Ti.Platform.displayCaps.platformHeight,  
 	    //width:Ti.Platform.displayCaps.platformWidth,    
 	    title:'SignUp',
-	    backgroundColor:'#000',
 	    barColor: '#333',
 	    fullscreen:false,
-	    navBarHidden:false
-	});
+	    navBarHidden:false,
+	    tabBarHidden:true,
+	    backButtonTitle:'test'
+	}); 
 	
 	signUpWin.addEventListener('open', function(e) {
 		Ti.App.fireEvent('setUsernameFocus', {});
 	});
+	
+	var tab = Ti.UI.createTab({
+	    title:"Doesn't matter",
+	    window: signUpWin
+	});
+ 
+	tabGroup.addTab(tab);
+	tabGroup.open();
 	
 	signUpWin.open();
 	
 	
 });
 
+Ti.App.addEventListener('closeSignUpTabGroup', function() {
+	tabGroup.close();
+});
 
 win.add(view);

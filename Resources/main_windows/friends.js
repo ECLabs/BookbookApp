@@ -29,7 +29,7 @@ friendsTableView.addEventListener('click', function(e)
 Titanium.API.info("Loading friends...");
 var jsonTextToDisplay = '';
 var host = 'labs.evanschambers.com'; // 'localhost';
-var url = 'http://'+host+':8080/Bookbook/user/rjevans/following';
+var url = 'http://'+host+':8080/Bookbook/api/user/rjevans/following';
 var xhr = Titanium.Network.createHTTPClient();
 xhr.onload = function() {
 	Titanium.API.info(' Text: ' + this.responseText);
