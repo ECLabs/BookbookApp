@@ -6,3 +6,4 @@ build
 build
 build/android
 build/iphone
+build.log
