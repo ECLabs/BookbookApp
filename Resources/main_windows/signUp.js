@@ -1,9 +1,9 @@
 // Page constants
 var FIELD_WIDTH = 185;
 var FIELD_LEFT_POS = 100;
-var HOST_PROD = 'labs.evanschambers.com';
+var HOST = 'labs.evanschambers.com';
 var HOST_DEV = 'localhost';
-var g_photoData = null;
+var g_profileImage = null;
 
 var win = Ti.UI.currentWindow; 
 
@@ -93,14 +93,8 @@ row.addEventListener('click', function(e)
 			var image = event.media;
 		    Ti.API.info(image.height +' x '+ image.width);
         	imageView.setImage(image);
-        	image = imageView.toImage();
-        	Ti.API.info(image.height + " x " + image.width);
-        	
-        	var f = Titanium.Filesystem.getFile(Titanium.Filesystem.applicationDataDirectory,'bookupprofilephoto.png');
-        	f.write(image);
-        	g_photoData = f.read();
-
-        
+        	Ti.API.info(image.height + " x " + image.width);        	
+        	g_profileImage = image;   
 		}
 	});
 });
@@ -168,8 +162,8 @@ done.addEventListener('click',function(e) {
 	
 	var jsonTextToDisplay = '';
 	
-	Ti.API.debug("about to send.  usernane field value -> " + usernameField.value)
-	var url = 'http://'+HOST_DEV+':8080/Bookbook/api/user';
+	Ti.API.info("about to send.  usernane field value -> " + usernameField.value)
+	var url = 'http://'+HOST+':8080/Bookbook/api/user';
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.onload = function() {
 	    var resp = this.responseText;  
@@ -180,35 +174,29 @@ done.addEventListener('click',function(e) {
 	    }
 	    else { // successful
 	    	var newUserObj = eval('('+resp+')');
-	    	if(!g_photoData) {
+	    	if(!g_profileImage) {
 	    		alert("Your account has been created without a profile photo.  Please sign in.");
 	    		closeThis();
 	    	}
-	    	var urlPhoto = 'http://'+HOST_DEV+':8080/Bookbook/api/user/'+newUserObj.userName+'/photo';
+	    	var urlPhoto = 'http://'+HOST+':8080/Bookbook/api/user/'+newUserObj.userName+'/photo';
         	Ti.API.info(urlPhoto);
-        	var data_to_send = { 
-	            "photo": g_photoData 
-        	};
-        	
+          	
 			Ti.API.info("after creating data_to_send");
         	var xhr2 = Titanium.Network.createHTTPClient();
-        	xhr2.setRequestHeader("enctype", "multipart/form-data");
-       		xhr2.setRequestHeader("Content-Type", "multipart/form-data");
-       		xhr2.set
-       		
-			xhr2.open('POST', urlPhoto);
+        	xhr2.open("POST",urlPhoto);  
+       		xhr2.send({myFile:g_profileImage});
+			
         	xhr2.onload = function() {
 			    var resp = this.responseText;  
 			    Ti.API.info(resp);
 			    if(!resp) {
 			    	alert("Your account has been created with profile photo.  Please sign in.");
-	    	
 			    	closeThis();
 			    }
-			}
-			xhr2.send(data_to_send); 
-        	
-	    	
+			    else {
+			    	alert(resp);
+				}   	
+        	}
 	    }
 	};
 
