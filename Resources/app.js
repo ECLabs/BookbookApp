@@ -1,3 +1,7 @@
+// Globals
+Ti.App.SERVICE_BASE_URL='http://labs.evanschambers.com:8080/Bookbook/api/';
+
+
 // this sets the background color of the master UIView (when there are no windows/tab groups on it)
 Titanium.UI.setBackgroundColor('#000');
 
@@ -73,7 +77,7 @@ var loginWin = Ti.UI.createWindow({
     tabBarHidden:true,
     title:'Login'
 });
-
+/*
 var tabGroupHidden = Ti.UI.createTabGroup();
 
 var tab = Ti.UI.createTab({
@@ -83,11 +87,7 @@ var tab = Ti.UI.createTab({
  
 tabGroupHidden.addTab(tab);
 tabGroupHidden.open();
-	
-
-
-//loginWin.open();
-
+*/
 
 loginWin.addEventListener('close', function() {
 	// open tab group
@@ -96,3 +96,4 @@ loginWin.addEventListener('close', function() {
 	tabGroup.open();
 	
 });
+loginWin.open();

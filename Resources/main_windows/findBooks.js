@@ -5,7 +5,7 @@ var tableView = Titanium.UI.createTableView({width: 'auto'});
 var count = 0;
 
 var searchBar = Titanium.UI.createSearchBar({
-	top:56,
+	top:0,
 	height: 40,
 	autocorrect: false,
 	hintText: 'Enter a title to find the book'
@@ -171,7 +171,7 @@ searchBar.addEventListener('return', function(e) {
 });
 //Create the scroll area, all our content goes in here  
 var scrollArea = Titanium.UI.createScrollView({  
-    top: 95,   
+    top: 40,   
     contentHeight: (count * 70),
     height: (Ti.Platform.displayCaps.platformHeight - 152),
     showVerticalScrollIndicator: true,

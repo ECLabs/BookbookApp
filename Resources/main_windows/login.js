@@ -140,8 +140,8 @@ loginBtn.addEventListener('click',function(e) {
 	
 	var jsonTextToDisplay = '';
 	var host = 'labs.evanschambers.com'; // 'localhost';
-	Ti.API.debug("about to send.  usernane field value -> " + usernameField.value)
-	var url = 'http://'+host+':8080/Bookbook/api/user/sign-in?username='+usernameField.value+'&password='+ passwordField.value;
+	Ti.API.debug("about to send.  username field value -> " + usernameField.value)
+	var url = Ti.App.SERVICE_BASE_URL + 'user/sign-in?username='+usernameField.value+'&password='+ passwordField.value;
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.onload = function() {
 		//Titanium.API.info(' Text: ' + this.responseText);

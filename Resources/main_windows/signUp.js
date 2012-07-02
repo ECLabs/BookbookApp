@@ -1,9 +1,28 @@
 // Page constants
 var FIELD_WIDTH = 185;
 var FIELD_LEFT_POS = 100;
-var HOST = 'labs.evanschambers.com';
-var HOST_DEV = 'localhost';
+var REQUEST_TIMEOUT = 5000;
 var g_profileImage = null;
+
+// TODO: incorporate a check for internet connectivity before trying to submit.  if (Titanium.Network.online == true)
+// TODO: add a loading symbol to replace the 'done' button.
+// TODO: set focus to the correct field upon validation error.
+
+var g_validateDialog = Ti.UI.createAlertDialog({
+	buttonNames: ['OK, I\'ll fix it!'],
+	cancel:0,
+	title: 'Error',
+	message: 'There\'s an error in one of the form fields'
+});
+var g_doneDialog = Ti.UI.createAlertDialog({
+	buttonNames: ['Sign-in'],
+	cancel:0,
+	title: 'Success',
+	message: 'Your account has been created, please sign-in.'
+});
+g_doneDialog.addEventListener('click', function(e) {
+	closeThisWindow();
+});
 
 var win = Ti.UI.currentWindow; 
 
@@ -135,66 +154,92 @@ var nextstepsLabel = Titanium.UI.createLabel({
 });
 footerView.add(nextstepsLabel);
 
-
+var spinnerButton = Titanium.UI.createButton({
+	systemButton:Titanium.UI.iPhone.SystemButton.SPINNER
+});
 
 // add a done button to the right nav bar
 var done = Titanium.UI.createButton({
 	systemButton:Titanium.UI.iPhone.SystemButton.DONE
 });
 done.addEventListener('click',function(e) { 
-	Titanium.API.info("You clicked the button"); 
+	Titanium.API.info("Done button clicked"); 
 	
-	// validate email format
-	var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;   
+	// change the right nav button to a spinner
+	win.setRightNavButton(spinnerButton);
+
+	var regexValidateEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/; 
+	var validationErrMsg = "";  
 	
-	if(!emailField.value || reg.test(emailField.value) == false) {
-		alert("ERROR - Please enter a valid email address");
-		return;
+	if(!emailField.value || regexValidateEmail.test(emailField.value) == false) {
+		validationErrMsg = "Please enter a valid email address";
 	}  
-	if(!usernameField.value) {
-		alert("ERROR - Please enter a username");
-		return;
+	else if(!usernameField.value) {
+		validationErrMsg = "Please enter a username";
 	}
-	if(!passwordField.value) {
-		alert("ERROR - Please enter a password");
+	else if(!passwordField.value) {
+		validationErrMsg = "Please enter a password";
+	}
+	
+	if(validationErrMsg != "") {
+		showValidationErrorDialog(validationErrMsg);
+		win.setRightNavButton(done);
 		return;
 	}
 	
 	var jsonTextToDisplay = '';
 	
 	Ti.API.info("about to send.  usernane field value -> " + usernameField.value)
-	var url = 'http://'+HOST+':8080/Bookbook/api/user';
+	var url = Ti.App.SERVICE_BASE_URL + 'user';
 	var xhr = Titanium.Network.createHTTPClient();
+	xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
+	xhr.onerror = function() {
+		
+		win.setRightNavButton(done);
+		showValidationErrorDialog("Unable to sign you up.  BookUp Web Services are currently unavailable.  Please try again soon.");
+	}
 	xhr.onload = function() {
+		// set the right nav button back to done
+		win.setRightNavButton(done);
+		
 	    var resp = this.responseText;  
 	    Ti.API.info(resp);
 	    
-	    if(resp == 'user could not be added') {
-	    	alert(resp);	
+	    var responseObject = eval('('+resp+')');
+	    if(responseObject.error) { // backend error message
+	    	showValidationErrorDialog(responseObject.error);
 	    }
 	    else { // successful
-	    	var newUserObj = eval('('+resp+')');
-	    	if(!g_profileImage) {
-	    		alert("Your account has been created without a profile photo.  Please sign in.");
-	    		closeThis();
+	    	// if the profile image has not be selected by the user, just complete the process
+	    	if(g_profileImage == null) {
+	    		g_doneDialog.show();
+	    		return;
 	    	}
-	    	var urlPhoto = 'http://'+HOST+':8080/Bookbook/api/user/'+newUserObj.userName+'/photo';
-        	Ti.API.info(urlPhoto);
+	    	
+	    	var urlPhoto = Ti.App.SERVICE_BASE_URL + 'user/'+responseObject.userName+'/photo';
+        	Ti.API.info('Preparing to send data to: ' + urlPhoto);
+        	win.setRightNavButton(spinnerButton);
           	
-			Ti.API.info("after creating data_to_send");
         	var xhr2 = Titanium.Network.createHTTPClient();
+        	
         	xhr2.open("POST",urlPhoto);  
+        	xhr2.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
        		xhr2.send({myFile:g_profileImage});
+			xhr2.onerror = function()  {
+				win.setRightNavButton(done);
+				showValidationErrorDialog("Your account was created, but we had problems uploading your profile image.  Please log in and set your profile image from the settings screen.");
+			}
 			
         	xhr2.onload = function() {
+        		win.setRightNavButton(done);
 			    var resp = this.responseText;  
 			    Ti.API.info(resp);
-			    if(!resp) {
-			    	alert("Your account has been created with profile photo.  Please sign in.");
-			    	closeThis();
+			    if(!resp) { // no data returned means it was a success
+			    	g_doneDialog.show();
+			    	return;
 			    }
-			    else {
-			    	alert(resp);
+			    else { // otherwise, there was an error
+			    	showValidationErrorDialog(resp);
 				}   	
         	}
 	    }
@@ -218,31 +263,30 @@ done.addEventListener('click',function(e) {
 	//xhr.send({'jsondata':{"class":"bookbook.domain.User","id":null,"aboutMe":"","activationMethod":"native","createDate":"Sat Nov 12 01:39:32 EST 2011","email":"","endDate":null,"firstName":"Barack","lastLoginDate":null,"lastName":"Obama","middleName":"","password":"","photoUrl":"http://localhost:8080/Bookbook/images/maxavatar.jpg","updateDate":null,"userId":179,"userName":"yeswecan","userTypeCode":"user"}});
 });
 
-
-
-
 win.setRightNavButton(done);
 
 // add the back button (need to change this to the automatic back button)
 var backButton = Titanium.UI.createButton({
-    title:L('Back'),
+    title:'Back',
     style:Titanium.UI.iPhone.SystemButtonStyle.PLAIN
 });
 backButton.addEventListener('click',function()
 {
-	Titanium.API.info("You clicked the button");
-	/*
-	 * This event is caught by login.js and results in closing the tabGroup that contains
-	 * this window.
-	 */
-	Ti.App.fireEvent('closeSignUpTabGroup'); 
+	Titanium.API.debug("You clicked the button back button");
+	closeThisWindow();
 });
 win.setLeftNavButton(backButton);
 
-function closeThis() {
+function closeThisWindow() {
 	/*
 	 * This event is caught by login.js and results in closing the tabGroup that contains
 	 * this window.
 	 */
 	Ti.App.fireEvent('closeSignUpTabGroup');
+}
+
+function showValidationErrorDialog(message) {
+	g_validateDialog.setMessage(message);
+	g_validateDialog.show();
+	
 }
