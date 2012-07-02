@@ -25,6 +25,7 @@ var usernameField = Titanium.UI.createTextField({
 	width: GLOBAL_BUTTON_WIDTH,
 	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED, 
 	keyboardType: Titanium.UI.KEYBOARD_EMAIL,
+	autocapitalization:false,
 	autocorrect:false,
 	paddingLeft:0,
 	opacity:1,

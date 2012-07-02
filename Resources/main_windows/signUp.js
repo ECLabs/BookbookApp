@@ -62,6 +62,7 @@ var usernameField = Titanium.UI.createTextField({
 	font:{fontSize:'14px'},
 	width: FIELD_WIDTH,
 	keyboardType: Titanium.UI.KEYBOARD_EMAIL,
+	autocapitalization:false,
 	autocorrect:false,
 	left:FIELD_LEFT_POS
 });
