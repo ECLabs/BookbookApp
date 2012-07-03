@@ -9,7 +9,7 @@ var checkinWin = Ti.UI.createWindow({
     url:'main_windows/findBooks.js',  
     height:Ti.Platform.displayCaps.platformHeight,  
     width:Ti.Platform.displayCaps.platformWidth,  
-    fullscreen:false,  
+    //fullscreen:false,  
     navBarHidden:false,
     title:'Look Up!'
      
