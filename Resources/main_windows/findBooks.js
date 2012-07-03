@@ -1,15 +1,75 @@
 var win = Ti.UI.currentWindow;  
-  
-var tableView = Titanium.UI.createTableView({width: 'auto'});
+win.layout = 'vertical'
 
 var count = 0;
 
 var searchBar = Titanium.UI.createSearchBar({
-	top:0,
+	top:56,
 	height: 40,
 	autocorrect: false,
 	hintText: 'Enter a title to find the book'
 })
+
+
+//Create the scroll area, all our content goes in here  
+var scrollArea = Titanium.UI.createScrollView({    
+    contentHeight: (count * 70),
+    height: (Ti.Platform.displayCaps.platformHeight - 152),
+    showVerticalScrollIndicator: true,
+    backgroundColor: '#fff'
+}); 
+
+var tableView = Titanium.UI.createTableView({width: 'auto'});
+tableView.addEventListener('click', function(e)
+{
+	Ti.API.debug('click row: ' + e.row.className)
+});
+scrollArea.add(tableView);
+
+
+win.add(searchBar);
+win.add(scrollArea);
+
+win.addEventListener('click', function(e)
+{
+	searchBar.blur();
+})
+searchBar.addEventListener('blur', function(e)
+{
+	//searchBar.properties.showCancel = false;
+})	
+searchBar.addEventListener('focus', function(e)
+{
+	//searchBar.properties.showCancel = true;
+})	
+searchBar.addEventListener('change', function(e)
+{
+	/*
+	if(searchBar.value == '')
+	{
+		Ti.API.debug(tableView.data.length);
+		
+		for(i = tableView.data.length - 1; i >= 0; i--)
+		{
+			tableView.deleteRow(i);
+		}	
+	}
+	
+	*/
+})
+
+// add a done button to the right nav bar
+var done = Titanium.UI.createButton({
+	systemButton:Titanium.UI.iPhone.SystemButton.DONE
+});
+done.addEventListener('click', function()
+{
+	win.close();
+});
+/**
+ * This doesn't work on Android'
+ */
+//win.setRightNavButton(done);
 
 searchBar.addEventListener('return', function(e) {
 	
@@ -169,66 +229,3 @@ searchBar.addEventListener('return', function(e) {
 	xhr.send(null);
 	
 });
-//Create the scroll area, all our content goes in here  
-var scrollArea = Titanium.UI.createScrollView({  
-    top: 40,   
-    contentHeight: (count * 70),
-    height: (Ti.Platform.displayCaps.platformHeight - 152),
-    showVerticalScrollIndicator: true,
-    backgroundColor: '#fff'
-}); 
-
-scrollArea.add(tableView);
-
-var simpleView = Titanium.UI.createView({
-	top:0
-})
-
-win.add(searchBar);
-win.add(scrollArea);
-
-win.addEventListener('click', function(e)
-{
-	searchBar.blur();
-})
-searchBar.addEventListener('blur', function(e)
-{
-	//searchBar.properties.showCancel = false;
-})	
-searchBar.addEventListener('focus', function(e)
-{
-	//searchBar.properties.showCancel = true;
-})	
-searchBar.addEventListener('change', function(e)
-{
-	/*
-	if(searchBar.value == '')
-	{
-		Ti.API.debug(tableView.data.length);
-		
-		for(i = tableView.data.length - 1; i >= 0; i--)
-		{
-			tableView.deleteRow(i);
-		}	
-	}
-	
-	*/
-})
-
-tableView.addEventListener('click', function(e)
-{
-	Ti.API.debug('click row: ' + e.row.className)
-});
-
-// add a done button to the right nav bar
-var done = Titanium.UI.createButton({
-	systemButton:Titanium.UI.iPhone.SystemButton.DONE
-});
-done.addEventListener('click', function()
-{
-	win.close();
-});
-/**
- * This doesn't work on Android'
- */
-//win.setRightNavButton(done);
