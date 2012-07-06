@@ -2,6 +2,9 @@ var win = Ti.UI.currentWindow;
 win.layout = 'vertical'
 
 var count = 0;
+var tab;
+
+var tabGroup = Ti.UI.createTabGroup();
 
 var searchBar = Titanium.UI.createSearchBar({
 	top:56,
@@ -73,6 +76,7 @@ done.addEventListener('click', function()
 
 searchBar.addEventListener('return', function(e) {
 	
+	count = 0;
 	scrollArea.scrollTo(0,0)
 	
 	var host = 'labs.evanschambers.com'; // 'localhost';
@@ -198,17 +202,52 @@ searchBar.addEventListener('return', function(e) {
 				font:{fontSize:12,fontFamily:'Helvetica Neue'}
 			});
 			
+			var c = (count-1).toString();
+			
 			var bookRowView = Titanium.UI.createView({ 
 				height:70, 
 				layout:'vertical', 
 				top:5, 
 				right:5, 
 				bottom:5, 
-				left:5 
+				left:5,
+				id:""+c
 			}); 
 			bookRowView.add(coverImage);
 			bookRowView.add(titleLabel);
 			bookRowView.add(authorLabel);
+			
+			bookRowView.addEventListener('click', function(e)
+			{	
+				checkInWin = Titanium.UI.createWindow({
+					url:'../child_windows/checkin.js',  
+				    title:'Check-In',
+				    barColor: '#777',
+				    fullscreen:false,
+				    navBarHidden:false,
+				    tabBarHidden:true,
+				    backButtonTitle:'test'
+				});
+				
+				var booktitle;
+				
+				//check to see if child was clicked
+				if(this.id == null){booktitle = jsonObject[this.parent.id].title;}  //child clicked
+				else{booktitle = jsonObject[this.id].title;}  //row background clicked
+				
+				checkInWin.bookTitle = booktitle;
+				
+				tab = Ti.UI.createTab({
+					    title:"Doesn't matter",
+					    window: checkInWin
+					});
+					
+				tabGroup.addTab(tab);
+				tabGroup.open();
+
+				checkInWin.open(); 
+				
+			});
 			// bookRowView.add(isbnLabel);
 			// bookRowView.add(descriptionLabel); 
 			// bookRowView.add(viewLabel);
@@ -217,15 +256,20 @@ searchBar.addEventListener('return', function(e) {
 			var row = Titanium.UI.createTableViewRow({height:'auto', className:isbn, hasChild:true});
 			row.add(bookRowView);
 			rowData[i] = row;
+			
+			
 			Ti.API.debug('completed for  #' + i)
 		}
 		Ti.API.debug('finished loading rows');
 		// Create the table view and set its data source to "rowData" array  
 		tableView.data = rowData;
 		scrollArea.scrollTo(0,0)		
-
 	};
 	xhr.open('GET', url);
 	xhr.send(null);
-	
+});
+
+Ti.App.addEventListener('closeCheckInTabGroup', function() {
+	tabGroup.removeTab(tab); //This deletes and creates a new tab for each selection
+	tabGroup.close();
 });
