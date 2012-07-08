@@ -5,7 +5,7 @@ var count = 0;
 
 var searchBar = Titanium.UI.createSearchBar({
 	top:56,
-	height: 40,
+	height: 'auto',
 	autocorrect: false,
 	hintText: 'Enter a title to find the book'
 })
@@ -14,7 +14,7 @@ var searchBar = Titanium.UI.createSearchBar({
 //Create the scroll area, all our content goes in here  
 var scrollArea = Titanium.UI.createScrollView({    
     contentHeight: (count * 70),
-    height: (Ti.Platform.displayCaps.platformHeight - 152),
+    height: 'auto',
     showVerticalScrollIndicator: true,
     backgroundColor: '#fff'
 }); 
