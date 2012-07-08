@@ -1,5 +1,6 @@
 // Globals
 Ti.App.SERVICE_BASE_URL='http://labs.evanschambers.com:8080/Bookbook/api/';
+Ti.App.REQUEST_TIMEOUT = 5000;
 
 
 // this sets the background color of the master UIView (when there are no windows/tab groups on it)
@@ -8,8 +9,7 @@ Titanium.UI.setBackgroundColor('#000');
 var checkinWin = Ti.UI.createWindow({  
     url:'main_windows/findBooks.js',  
     height:Ti.Platform.displayCaps.platformHeight,  
-    width:Ti.Platform.displayCaps.platformWidth,  
-    //fullscreen:false,  
+    width:Ti.Platform.displayCaps.platformWidth,   
     navBarHidden:false,
     title:'Look Up!'
      
@@ -97,3 +97,8 @@ loginWin.addEventListener('close', function() {
 	
 });
 loginWin.open();
+
+Ti.App.addEventListener('closeMainTabGroup', function() {
+	tabGroup.close();
+	loginWin.open();
+});

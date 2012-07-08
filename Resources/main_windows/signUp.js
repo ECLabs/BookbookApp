@@ -1,7 +1,7 @@
 // Page constants
 var FIELD_WIDTH = 185;
 var FIELD_LEFT_POS = 100;
-var REQUEST_TIMEOUT = 5000;
+var REQUEST_TIMEOUT = Ti.App.REQUEST_TIMEOUT;
 var g_profileImage = null;
 
 // TODO: incorporate a check for internet connectivity before trying to submit.  if (Titanium.Network.online == true)

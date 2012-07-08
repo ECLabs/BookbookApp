@@ -139,3 +139,55 @@ totalCheckinsRow.add(statView3);
 rowData[2] = totalCheckinsRow;
 
 statsTable.data = rowData;
+
+// FB login button, appears only if user logged in with FB.
+var fbButton = Ti.Facebook.createLoginButton({
+    style : Ti.Facebook.BUTTON_STYLE_WIDE
+})
+statView1.add(fbButton);
+
+// This is the non-facebook logout button... only appears if the user
+// did not login with FB
+var logoutButton = Titanium.UI.createButton({
+	title:'Logout',
+	color:'#000',
+	font:{fontSize:12,fontFamily:'Helvetica Neue', fontWeight:'bold'},
+	borderRadius: 5,
+	borderColor: '#000',
+	height: 35,
+	width: 120,
+	backgroundColor: '#feba86'
+});
+statView1.add(logoutButton);
+
+logoutButton.addEventListener('click', function(e) {
+	Ti.API.debug("logging out of Bookup");
+    closeThisWindow();
+});
+
+
+Ti.Facebook.addEventListener('logout', function(e) {
+    Ti.API.debug("logging out of FB/Bookup");
+    closeThisWindow();
+});
+
+win.addEventListener('focus', function(e) {
+	if(Ti.Facebook.loggedIn) {
+		Ti.API.debug("showing FB logout");
+		fbButton.show();
+		logoutButton.hide();
+	} else {
+		Ti.API.debug("hiding FB logout");
+		fbButton.hide();
+		logoutButton.show();
+	}
+});
+
+function closeThisWindow() {
+	/*
+	 * This event is caught by login.js and results in closing the tabGroup that contains
+	 * this window.
+	 */
+	Ti.App.fireEvent('closeMainTabGroup');
+}
+
