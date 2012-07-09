@@ -81,46 +81,87 @@ var profileName = Titanium.UI.createLabel({
 	font:{fontSize:18, fontStyle:'bold'}
 });
 
-var curReadLabel = Titanium.UI.createLabel({
-	id:'curReadLabel',
-	text:'Currently Reading',
+var locationLabel = Titanium.UI.createLabel({
+	id:'locationLabel',
+	text:'Location',
+	top:'-5%',
+	height:'5%',
+	font:{fontSize:11},
+	left:'45%'
+});
+
+var bioLabel = Titanium.UI.createLabel({
+	id:'bioLabel',
+	text:'Bio information...',
 	top:'5%',
 	height:'5%',
-	font:{fontSize:12},
+	font:{fontSize:11},
 	left:'5%'
 });
 
-var recReadLabel = Titanium.UI.createLabel({
+var curReadLabel = Titanium.UI.createButton({
+	id:'curReadLabel',
+	title:'Currently Reading',
+	top:'5%',
+	height:40,
+	width: '90%',
+	font:{fontSize:15},
+	left:'5%',
+	borderRadius: 0,
+	textAlign: 'left',
+	color: '#000',
+	borderWidth:3,
+});
+
+var recReadLabel = Titanium.UI.createButton({
 	id:'recReadLabel',
-	text:'Recently Read',
-	top:'10%',
-	height:'5%',
-	font:{fontSize:12},
-	left:'5%'
+	title:'Recently Read',
+	top:'2%',
+	height:40,
+	width: '90%',
+	font:{fontSize:15},
+	left:'5%',
+	borderRadius: 0,
+	textAlign: 'left',
+	color: '#000',
+	borderWidth:3,
+	top: '1%'
 });
 
-var readAWhileLabel = Titanium.UI.createLabel({
+var readAWhileLabel = Titanium.UI.createButton({
 	id:'readAWhileLabel',
-	text:'Read a while ago',
-	top:'12%',
-	height:'5%',
-	font:{fontSize:12},
-	left:'5%'
+	title:'Read a while ago',
+	height:40,
+	width: '90%',
+	font:{fontSize:15},
+	left:'5%',
+	borderRadius: 0,
+	textAlign: 'left',
+	color: '#000',
+	borderWidth:3,
+	top: -3
 });
 
-var readWantLabel = Titanium.UI.createLabel({
+var readWantLabel = Titanium.UI.createButton({
 	id:'readWantLabel',
-	text:'Want to Read',
-	top:'15%',
-	height:'5%',
-	font:{fontSize:12},
-	left:'5%'
+	title:'Want to Read',
+	height:40,
+	width: '90%',
+	font:{fontSize:15},
+	left:'5%',
+	borderRadius: 0,
+	textAlign: 'left',
+	color: '#000',
+	borderWidth:3,
+	top: -3
 });
 
 
 statView1.add(editProfileButton);
 statView1.add(profilePic);
 statView1.add(profileName);
+statView1.add(locationLabel);
+statView1.add(bioLabel);
 statView1.add(curReadLabel);
 statView1.add(recReadLabel);
 statView1.add(readAWhileLabel);
