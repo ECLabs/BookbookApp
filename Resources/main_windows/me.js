@@ -59,7 +59,6 @@ var profilePic = Titanium.UI.createImageView({
 	width:'35%',
 	top:'-7%',
 	left:'5%',
-	borderWidth:1
 });
 
 var profileName = Titanium.UI.createLabel({
@@ -116,7 +115,6 @@ editProfileButton.addEventListener('click', function(e)
 	width:'35%',
 	top:0,
 	left:'5%',
-	borderWidth:1
 });
 	
 	var aboutMeButton = Titanium.UI.createButton({
@@ -131,6 +129,7 @@ editProfileButton.addEventListener('click', function(e)
 	
 	aboutMeButton.addEventListener('click', function(e)
 	{
+		tableviewManage.hide();
 		nameLabel.show();
 		nameText.show();
 		locationLabel.show();
@@ -157,6 +156,7 @@ editProfileButton.addEventListener('click', function(e)
 		locationText.hide();
 		bioLabel.hide();
 		bioArea.hide();
+		tableviewManage.show();
 	});
 	
 	var nameLabel = Titanium.UI.createLabel({
@@ -248,6 +248,25 @@ locationText.addEventListener('return', function()
 {
     locationText.blur();
 });
+
+// create table view data object
+var dataManage = [
+	{title:'Currently Reading', hasChild:true, height:35, selectedColor:'#fff'},
+	{title:'Want to Read', hasChild:true, height: 35, selectedColor:'#fff'},
+	{title:'Recently Read', hasChild:true, height: 35, selectedColor:'#fff'},
+	{title:'Read a While Ago', hasChild:true, height: 35, selectedColor:'#fff'}
+];
+
+// create table view
+var tableviewManage = Titanium.UI.createTableView({
+	data:data,
+	font:{fontSize:11},
+	top:'49%',
+	width: '90%',
+	height: 140,
+	borderWidth:1,
+	borderColor: '#888'
+});
 	
 	var winview = Ti.UI.createView({backgroundColor:'white'});
 	winview.add(saveProfileButton);
@@ -261,6 +280,9 @@ locationText.addEventListener('return', function()
 	winview.add(locationText);
 	winview.add(bioLabel);
 	winview.add(bioArea);
+	winview.add(tableviewManage);
+	
+	tableviewManage.hide(); //Initial state
 	
 	editProfileWin.add(winview);
 	
@@ -280,79 +302,36 @@ var locationLabel = Titanium.UI.createLabel({
 var bioLabel = Titanium.UI.createLabel({
 	id:'bioLabel',
 	text:'Bio information...',
-	top:'5%',
 	height:'5%',
 	font:{fontSize:11},
 	left:'5%'
 });
 
-var curReadLabel = Titanium.UI.createButton({
-	id:'curReadLabel',
-	title:'Currently Reading',
-	top:'5%',
-	height:40,
-	width: '90%',
-	font:{fontSize:15},
-	left:'5%',
-	borderRadius: 0,
-	textAlign: 'left',
-	color: '#000',
-	borderWidth:3,
-});
+// create table view data object
+var data = [
+	{title:'Currently Reading', hasChild:true, height:35, selectedColor:'#fff'},
+	{title:'Want to Read', hasChild:true, height: 35, selectedColor:'#fff'},
+	{title:'Recently Read', hasChild:true, height: 35, selectedColor:'#fff'},
+	{title:'Read a While Ago', hasChild:true, height: 35, selectedColor:'#fff'}
+];
 
-var recReadLabel = Titanium.UI.createButton({
-	id:'recReadLabel',
-	title:'Recently Read',
+// create table view
+var tableview = Titanium.UI.createTableView({
+	data:data,
+	font:{fontSize:11},
 	top:'2%',
-	height:40,
 	width: '90%',
-	font:{fontSize:15},
-	left:'5%',
-	borderRadius: 0,
-	textAlign: 'left',
-	color: '#000',
-	borderWidth:3,
-	top: '1%'
+	height: 140,
+	borderWidth:1,
+	borderColor: '#888'
 });
-
-var readAWhileLabel = Titanium.UI.createButton({
-	id:'readAWhileLabel',
-	title:'Read a while ago',
-	height:40,
-	width: '90%',
-	font:{fontSize:15},
-	left:'5%',
-	borderRadius: 0,
-	textAlign: 'left',
-	color: '#000',
-	borderWidth:3,
-	top: -3
-});
-
-var readWantLabel = Titanium.UI.createButton({
-	id:'readWantLabel',
-	title:'Want to Read',
-	height:40,
-	width: '90%',
-	font:{fontSize:15},
-	left:'5%',
-	borderRadius: 0,
-	textAlign: 'left',
-	color: '#000',
-	borderWidth:3,
-	top: -3
-});
-
 
 statView1.add(editProfileButton);
 statView1.add(profilePic);
 statView1.add(profileName);
 statView1.add(locationLabel);
 statView1.add(bioLabel);
-statView1.add(curReadLabel);
-statView1.add(recReadLabel);
-statView1.add(readAWhileLabel);
-statView1.add(readWantLabel);
+statView1.add(tableview);
 		
 var totalFriendsRow = Titanium.UI.createTableViewRow({height:'auto', backgroundColor:'#f00'});
 totalFriendsRow.add(statView1);
