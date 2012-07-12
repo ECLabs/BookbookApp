@@ -247,13 +247,11 @@ bioArea.addEventListener('return', function()
 nameText.addEventListener('return', function()
 {
     nameText.blur();
-    bioArea.blur();
 });
 
 locationText.addEventListener('return', function()
 {
     locationText.blur();
-    bioArea.blur();
 });
 
 // create table view data object
