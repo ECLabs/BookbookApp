@@ -86,6 +86,11 @@ editProfileButton.addEventListener('click', function(e)
 		
 	});
 	
+	var scrollWin = Titanium.UI.createScrollView({
+		width: '100%',
+		height: '100%'
+	});
+	
 	var saveProfileButton = Titanium.UI.createButton({
 	title:'Save',
 	height:25,
@@ -242,11 +247,13 @@ bioArea.addEventListener('return', function()
 nameText.addEventListener('return', function()
 {
     nameText.blur();
+    bioArea.blur();
 });
 
 locationText.addEventListener('return', function()
 {
     locationText.blur();
+    bioArea.blur();
 });
 
 // create table view data object
@@ -283,8 +290,8 @@ var tableviewManage = Titanium.UI.createTableView({
 	winview.add(tableviewManage);
 	
 	tableviewManage.hide(); //Initial state
-	
-	editProfileWin.add(winview);
+	scrollWin.add(winview);
+	editProfileWin.add(scrollWin);
 	
 	Titanium.UI.currentTab.open(editProfileWin,{animated:true});	
 });
