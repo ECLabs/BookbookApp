@@ -86,7 +86,7 @@ commentArea.addEventListener('blur',function(e){
 });
 
 var pickerLabel = Ti.UI.createLabel({
-	text: 'Select chapter(s) for this checkin',
+	text: 'Select chapter(s) for this chickin',
 	left: '5%',
 	top: '2%'
 });
@@ -125,31 +125,50 @@ var twitterButton = Ti.UI.createButton({
 	top: -120
 });
 
+var pickerValue;
+
+picker.addEventListener('change',function(e) {
+    pickerValue = e.row.title;
+});
+
 fbButton.addEventListener('click', function(e){
 	if(Ti.Facebook.loggedIn) {
-	// First make sure this permission exists
-	    Ti.Facebook.authorize();
-	    
-	    // ...
-	    // ...
-	    
-	    // Now post the photo after you've confirmed that authorize() succeeded
-	    var data = {
-	        name: 'Test', 
-	        message:'Test Post From BookUp'
-	        };
-	        
-	    Ti.Facebook.requestWithGraphPath('me/posts', data, 'POST', function(e){
-	        if (e.success) {
-	            alert("Success!  From FB: " + e.result);
-	        } else {
-	            if (e.error) {
-	                alert(e.error);
-	            } else {
-	                alert("Unkown result");
-	            }
-	        }
-	    });
+		var data = {
+            name:''+theTitle,
+            link:"http://mywebsite.com",
+            caption:'On Chapter:'+pickerValue,
+            description:''+commentArea.value,
+        };
+
+	 facebook_dialog = Titanium.Facebook.dialog(
+                    "feed", 
+                    data, 
+                    showRequestResult); 
+                    
+    function showRequestResult(r)
+    {
+        //alert(r)
+ 
+        if (r.result)
+        {
+            facebook_response = Ti.UI.createAlertDialog({
+                        title:'Facebook Shared!',
+                       message:'Your stream was published'
+                       });
+        }
+        else
+        {
+            facebook_response = Ti.UI.createAlertDialog({
+                           title:'Facebook Stream was cancelled',  
+                           message:'Nothing was published.'
+                         });
+ 
+        }
+        facebook_response.show();
+        var fb_resp_timeout = setTimeout(function(){
+            facebook_response.hide();
+        }, 2000);
+    }
 	}
 });
 
