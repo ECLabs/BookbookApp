@@ -85,6 +85,79 @@ commentArea.addEventListener('blur',function(e){
     }
 });
 
+var pickerLabel = Ti.UI.createLabel({
+	text: 'Select chapter(s) for this checkin',
+	left: '5%',
+	top: '2%'
+});
+
+var picker = Ti.UI.createPicker({
+	width: '25%',
+	top: '3%',
+	left: '5%',
+	textAlign: 'center'
+});
+
+var data = [];
+var i=0;
+for(i=0; i<99; i++) 
+{
+	data[i] = 	{title:''+(i+1),custom_item:'b',fontSize:18};
+}
+
+picker.add(data);
+// turn on the selection indicator (off by default)
+picker.selectionIndicator = true;
+
+var fbButton = Ti.UI.createButton({
+	title: 'Post to FaceBook',
+	width:'50%',
+	height: 50,
+	right: '5%',
+	top: -142
+});
+
+var twitterButton = Ti.UI.createButton({
+	title: 'Post to Twitter',
+	width:'50%',
+	height: 50,
+	right: '5%',
+	top: -120
+});
+
+fbButton.addEventListener('click', function(e){
+	if(Ti.Facebook.loggedIn) {
+	// First make sure this permission exists
+	    Ti.Facebook.authorize();
+	    
+	    // ...
+	    // ...
+	    
+	    // Now post the photo after you've confirmed that authorize() succeeded
+	    var data = {
+	        name: 'Test', 
+	        message:'Test Post From BookUp'
+	        };
+	        
+	    Ti.Facebook.requestWithGraphPath('me/posts', data, 'POST', function(e){
+	        if (e.success) {
+	            alert("Success!  From FB: " + e.result);
+	        } else {
+	            if (e.error) {
+	                alert(e.error);
+	            } else {
+	                alert("Unkown result");
+	            }
+	        }
+	    });
+	}
+});
+
+
 statView.add(title);
 statView.add(commentArea);
+statView.add(pickerLabel);
+statView.add(picker);
+statView.add(fbButton);
+statView.add(twitterButton);
 win.add(statView);
