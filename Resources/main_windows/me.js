@@ -56,7 +56,7 @@ statView3.add(checkinCountLabel)
 var profilePic = Titanium.UI.createImageView({
 	image:'http://www.appcelerator.com/wp-content/uploads/2009/06/titanium_desk.png',
 	height:'30%',
-	width:'35%',
+	width: '35%',
 	top:'-7%',
 	left:'5%',
 });
@@ -67,7 +67,8 @@ var profileName = Titanium.UI.createLabel({
 	top:'-20%',
 	height:'10%',
 	left:'45%',
-	font:{fontSize:18, fontStyle:'bold'}
+	font:{fontSize:18, fontStyle:'bold'},
+	width: '50%'
 });
 
 var editProfileButton = Titanium.UI.createButton({
@@ -294,7 +295,6 @@ var tableviewManage = Titanium.UI.createTableView({
 	Titanium.UI.currentTab.open(editProfileWin,{animated:true});	
 });
 
-
 var locationLabel = Titanium.UI.createLabel({
 	id:'locationLabel',
 	text:'Location',
@@ -309,8 +309,22 @@ var bioLabel = Titanium.UI.createLabel({
 	text:'Bio information...',
 	height:'5%',
 	font:{fontSize:11},
-	left:'5%'
+	left:'5%',
+	width: '90%'
 });
+
+if(Ti.Facebook.loggedIn) {
+	Ti.Facebook.requestWithGraphPath('me', {}, 'GET', function(e) {
+        if (e.success) {
+           Ti.API.info(e.result);
+            var fbdata = JSON.parse(e.result);
+            profileName.text = ""+fbdata.name;
+			locationLabel.text = ""+fbdata.locale;
+			bioLabel.text = "My name is "+fbdata.name+", I am a "+fbdata.gender+", and I love to read.";
+			profilePic.image = "http://graph.facebook.com/"+fbdata.username+"/picture";
+           }
+	});
+}
 
 // create table view data object
 var data = [
