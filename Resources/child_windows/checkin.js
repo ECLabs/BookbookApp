@@ -86,7 +86,7 @@ commentArea.addEventListener('blur',function(e){
 });
 
 var pickerLabel = Ti.UI.createLabel({
-	text: 'Select chapter(s) for this chickin',
+	text: 'Select chapter(s) for this checkin',
 	left: '5%',
 	top: '2%'
 });
@@ -122,7 +122,7 @@ var twitterButton = Ti.UI.createButton({
 	width:'50%',
 	height: 50,
 	right: '5%',
-	top: -120
+	top: -118
 });
 
 var pickerValue;
