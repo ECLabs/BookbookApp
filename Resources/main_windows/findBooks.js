@@ -219,9 +219,9 @@ searchBar.addEventListener('return', function(e) {
 			
 			bookRowView.addEventListener('click', function(e)
 			{	
-				checkInWin = Titanium.UI.createWindow({
-					url:'../child_windows/checkin.js',  
-				    title:'Check-In',
+				book_detail = Titanium.UI.createWindow({
+					url:'../child_windows/book_detail.js',  
+				    title:'',
 				    barColor: '#777',
 				    fullscreen:false,
 				    navBarHidden:false,
@@ -230,22 +230,41 @@ searchBar.addEventListener('return', function(e) {
 				});
 				
 				var booktitle;
+				var bookauthor;
+				var bookdesc;
+				var bookimage;
 				
 				//check to see if child was clicked
-				if(this.id == null){booktitle = jsonObject[this.parent.id].title;}  //child clicked
-				else{booktitle = jsonObject[this.id].title;}  //row background clicked
+				if(this.id == null)
+				{
+					booktitle = jsonObject[this.parent.id].title;
+					bookauthor = jsonObject[this.parent.id].author;
+					bookdesc = jsonObject[this.parent.id].description;
+					bookimage = jsonObject[this.parent.id].smallThumbnailUrl;
+				}  //child clicked
 				
-				checkInWin.bookTitle = booktitle;
+				else
+				{
+					booktitle = jsonObject[this.id].title;
+					bookauthor = jsonObject[this.id].author;
+					bookdesc = jsonObject[this.id].description;
+					bookimage = jsonObject[this.id].smallThumbnailUrl;
+				}  //row background clicked
+				
+				book_detail.bookTitle = booktitle;
+				book_detail.bookAuthor = bookauthor;
+				book_detail.bookDesc = bookdesc;
+				book_detail.bookImage = bookimage;
 				
 				tab = Ti.UI.createTab({
 					    title:"Doesn't matter",
-					    window: checkInWin
+					    window: book_detail
 					});
-					
-				tabGroup.addTab(tab);
+				
+				tabGroup.addTab(tab);	
 				tabGroup.open();
 
-				checkInWin.open(); 
+				book_detail.open(); 
 				
 			});
 			// bookRowView.add(isbnLabel);
@@ -269,7 +288,7 @@ searchBar.addEventListener('return', function(e) {
 	xhr.send(null);
 });
 
-Ti.App.addEventListener('closeCheckInTabGroup', function() {
+Ti.App.addEventListener('closeBook_DetailTabGroup', function() {
 	tabGroup.removeTab(tab); //This deletes and creates a new tab for each selection
 	tabGroup.close();
 });
