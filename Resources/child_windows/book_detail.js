@@ -114,6 +114,31 @@ var commentButton = Titanium.UI.createButton({
 	color: '#777'
 });
 
+commentButton.addEventListener('click',function()
+{
+	commentWin = Titanium.UI.createWindow({
+					url:'../child_windows/comment.js',  
+				    title:'Add Comment',
+				    barColor: '#777',
+				    fullscreen:false,
+				    navBarHidden:false,
+				    tabBarHidden:true,
+				    backButtonTitle:'test'
+				});
+				
+	commentWin.bookTitle = theTitle;
+	
+					tab = Ti.UI.createTab({
+					    title:"Doesn't matter",
+					    window: commentWin
+					});
+					
+				tabGroup.addTab(tab);	
+				tabGroup.open();
+
+				commentWin.open(); 
+});
+
 var moreButton = Titanium.UI.createButton({
 	title: "More",
 	top: -25,
@@ -122,12 +147,54 @@ var moreButton = Titanium.UI.createButton({
 	color: '#777'
 });
 
+var optionsDialogOpts = {
+	options:['Buy this book', 'Add to book list', 'Tweet', 'Cancel'],
+	//destructive:2,
+	cancel:3,
+	title:'More Actions'
+};
+
+var dialog = Titanium.UI.createOptionDialog(optionsDialogOpts);
+
+// add event listener
+dialog.addEventListener('click',function(e)
+{
+	//label.text = 'You selected ' + e.index;
+	
+	//if (isAndroid) {
+		//if (e.button) {
+		//	label.text += ' button';
+		//}  else {
+		//	label.text += ' option';
+		//}
+	//}
+});
+
+moreButton.addEventListener('click', function()
+{
+	dialog.show();
+});
+
+var today = Titanium.UI.createLabel({
+	text:"  Today",
+	top:2,
+	height:26,
+	left:0,
+	width:'100%',
+	textAlign: 'left',
+	backgroundColor: '#fff',
+	color: '#777',
+	font:{fontSize:14, fontStyle:'bold'}
+});
+
 var borderBottom = Ti.UI.createView({
-    backgroundColor: '#000',
+    backgroundColor: '#777',
     width: '100%',
     height: 1,
     bottom: 0
 });
+
+today.add(borderBottom);
 
 statView.add(title);
 statView.add(image);
@@ -135,9 +202,15 @@ statView.add(bookInfo);
 statView.add(recentActivity);
 statView.add(commentButton);
 statView.add(moreButton);
+statView.add(today);
 win.add(statView);
 
 Ti.App.addEventListener('closeCheckInTabGroup', function() {
+	tabGroup.removeTab(tab); //This deletes and creates a new tab for each selection
+	tabGroup.close();
+});
+
+Ti.App.addEventListener('closeCommentTabGroup', function() {
 	tabGroup.removeTab(tab); //This deletes and creates a new tab for each selection
 	tabGroup.close();
 });
