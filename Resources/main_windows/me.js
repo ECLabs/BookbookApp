@@ -11,6 +11,8 @@ var scrollArea3 = Titanium.UI.createScrollView({
 }); 
 win.add(scrollArea3);
 
+var REQUEST_TIMEOUT = Ti.App.REQUEST_TIMEOUT;
+		   
 var statsTable = Titanium.UI.createTableView();
 
 scrollArea3.add(statsTable);
@@ -61,9 +63,28 @@ var profilePic = Titanium.UI.createImageView({
 	left:'5%',
 });
 
+var username = Titanium.App.Properties.getString("username");
+var userData;
+var resp;
+
+var url = Ti.App.SERVICE_BASE_URL + 'user/'+username;
+var xhr = Titanium.Network.createHTTPClient();
+xhr.onload = function() {
+		    resp = this.responseText;
+		    Ti.API.info(resp);
+		    
+		    userData = JSON.parse(resp);
+
+			profileName.text = userData.firstName+" "+userData.lastName;
+			bioLabel.text = userData.aboutMe;
+		   }
+		  
+xhr.open('GET', url);
+xhr.send();
+
 var profileName = Titanium.UI.createLabel({
 	id:'curReadLabel',
-	text:'My Name',
+	text:'',
 	top:'-20%',
 	height:'10%',
 	left:'45%',
@@ -102,7 +123,7 @@ var locationLabel = Titanium.UI.createLabel({
 
 var bioLabel = Titanium.UI.createLabel({
 	id:'bioLabel',
-	text:'Bio information...',
+	text:'',
 	height:'5%',
 	font:{fontSize:11},
 	left:'5%',
@@ -212,4 +233,51 @@ function closeThisWindow() {
 	 */
 	Ti.App.fireEvent('closeMainTabGroup');
 }
+
+Ti.App.addEventListener('saveProfileEvent', function() {
+	var username = Titanium.App.Properties.getString("username");
+	var userData2;
+	var resp2;
+	
+	var url2 = Ti.App.SERVICE_BASE_URL + 'user/'+username;
+	var xhr2 = Titanium.Network.createHTTPClient();
+	xhr2.onload = function() {
+			    resp2 = this.responseText;
+			    Ti.API.info(resp2);
+
+			    userData2 = JSON.parse(resp2);
+			    
+				profileName.text = userData2.firstName+" "+userData2.lastName;
+				bioLabel.text = userData2.aboutMe;
+			   }
+			  
+	xhr2.open('GET', url);
+	xhr2.send();
+	
+	var urlPhoto = Ti.App.SERVICE_BASE_URL + 'user/'+username+'/photo';
+        	Ti.API.info('Preparing to send data to: ' + urlPhoto);
+          	
+        	var xhr3 = Titanium.Network.createHTTPClient();
+        	
+        	xhr3.open("POST",urlPhoto);  
+        	xhr3.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
+       		xhr3.send({myFile:g_profileImage});
+			xhr3.onerror = function()  {
+				win.setRightNavButton(done);
+				showValidationErrorDialog("Your account was created, but we had problems uploading your profile image.  Please log in and set your profile image from the settings screen.");
+			}
+			
+        	xhr3.onload = function() {
+        		win.setRightNavButton(done);
+			    var resp = this.responseText;  
+			    Ti.API.info(resp);
+			    if(!resp) { // no data returned means it was a success
+			    	g_doneDialog.show();
+			    	return;
+			    }
+			    else { // otherwise, there was an error
+			    	showValidationErrorDialog(resp);
+				}   	
+        	}
+});
 

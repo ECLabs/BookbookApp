@@ -4,6 +4,8 @@
 		height: '100%'
 	});
 	
+	var REQUEST_TIMEOUT = Ti.App.REQUEST_TIMEOUT;
+	
 	var saveProfileButton = Titanium.UI.createButton({
 	title:'Save',
 	height:25,
@@ -14,11 +16,6 @@
 	color: '#000000'
 	});
 	
-	saveProfileButton.addEventListener('click', function(e)
-	{
-		Ti.UI.currentWindow.close();
-	});
-	
 	var profileManage = Titanium.UI.createLabel({
 	text:'Manage Profile',
 	top:'12%',
@@ -27,12 +24,46 @@
 	font:{fontSize:18, fontStyle:'bold'}
 	});
 	
+var username = Titanium.App.Properties.getString("username");
+var password = Titanium.App.Properties.getString("password");
+var userData;
+var resp;
+
+var url = Ti.App.SERVICE_BASE_URL + 'user/'+username;
+var xhr = Titanium.Network.createHTTPClient();
+xhr.onload = function() {
+		    resp = this.responseText;
+		    Ti.API.info(resp);
+		    
+		    userData = JSON.parse(resp);
+
+			nameText.value = userData.firstName+" "+userData.lastName;
+			bioArea.value = userData.aboutMe;
+		   }
+		  
+xhr.open('GET', url);
+xhr.send();
+	
 	var profilePicManage = Titanium.UI.createImageView({
 	image:'http://www.appcelerator.com/wp-content/uploads/2009/06/titanium_desk.png',
 	height:'30%',
 	width:'35%',
 	top:0,
 	left:'5%',
+});
+
+profilePicManage.addEventListener('click', function(e)
+{
+Titanium.Media.openPhotoGallery({
+		success:function(event) {
+			var image = event.media;
+		    Ti.API.info(image.height +' x '+ image.width);
+        	profilePicManage.image = image;
+        	Ti.API.info(image.height + " x " + image.width);        	
+        	g_profileImage = image;   
+        	userImage = image;
+		}
+	});
 });
 	
 	var aboutMeButton = Titanium.UI.createButton({
@@ -203,3 +234,44 @@ var tableviewManage = Titanium.UI.createTableView({
 	tableviewManage.hide(); //Initial state
 	scrollWin.add(winview);
 	Ti.UI.currentWindow.add(scrollWin);
+	
+	var navActInd = Titanium.UI.createActivityIndicator();
+	
+saveProfileButton.addEventListener('click', function(e)
+	{
+		
+		var url = Ti.App.SERVICE_BASE_URL + 'user/update/'+username;
+		var xhr = Titanium.Network.createHTTPClient();
+		xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
+		xhr.onerror = function() {
+			showValidationErrorDialog("BookUp Web Services are currently unavailable.  Please try again soon.");
+		}
+		xhr.onload = function() {
+		    var resp = this.responseText;  
+		    Ti.API.info(resp);
+		}
+		
+		xhr.open('POST', url);
+		xhr.send({'jsondata':{
+			"id":0,
+			"aboutMe":bioArea.value,
+			"activationMethod":"native",
+			"email":"",
+			"firstName":nameText.value,
+			"lastName":"",
+			"middleName":"null",
+			"password":username,
+			"userName":password,
+			"userTypeCode":"user"
+		}}); 
+		
+		Ti.UI.currentWindow.setRightNavButton(navActInd);
+		navActInd.show();
+		setTimeout(function()
+		{
+			navActInd.hide();
+			Ti.UI.currentWindow.setRightNavButton(null);
+			Ti.App.fireEvent('saveProfileEvent');
+			Ti.UI.currentWindow.close();
+		},3000);
+	});
