@@ -24,6 +24,10 @@
 	font:{fontSize:18, fontStyle:'bold'}
 	});
 	
+	var userId = Titanium.UI.createLabel({  //This is a place holder so that our userId will be in scope
+	});
+	
+	
 var username = Titanium.App.Properties.getString("username");
 var password = Titanium.App.Properties.getString("password");
 var userData;
@@ -37,9 +41,12 @@ xhr.onload = function() {
 		    
 		    userData = JSON.parse(resp);
 
-			nameText.value = userData.firstName+" "+userData.lastName;
+			nameText.value = userData.fullName;
 			bioArea.value = userData.aboutMe;
-		   }
+			userId.value = userData.userId;
+			locationText.value = userData.location;
+			if(userData.photoUrl != ''){profilePicManage.image = userData.photoUrl;}
+		  }
 		  
 xhr.open('GET', url);
 xhr.send();
@@ -59,9 +66,9 @@ Titanium.Media.openPhotoGallery({
 			var image = event.media;
 		    Ti.API.info(image.height +' x '+ image.width);
         	profilePicManage.image = image;
-        	Ti.API.info(image.height + " x " + image.width);        	
-        	g_profileImage = image;   
-        	userImage = image;
+        	Ti.API.info(image.height + " x " + image.width);        	   
+  
+        	profilePicManage.image = image;
 		}
 	});
 });
@@ -230,6 +237,7 @@ var tableviewManage = Titanium.UI.createTableView({
 	winview.add(bioLabel);
 	winview.add(bioArea);
 	winview.add(tableviewManage);
+	winview.add(userId);
 	
 	tableviewManage.hide(); //Initial state
 	scrollWin.add(winview);
@@ -240,7 +248,7 @@ var tableviewManage = Titanium.UI.createTableView({
 saveProfileButton.addEventListener('click', function(e)
 	{
 		
-		var url = Ti.App.SERVICE_BASE_URL + 'user/update/'+username;
+		var url = Ti.App.SERVICE_BASE_URL + 'user/update/userId-'+userId.value;
 		var xhr = Titanium.Network.createHTTPClient();
 		xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
 		xhr.onerror = function() {
@@ -253,17 +261,51 @@ saveProfileButton.addEventListener('click', function(e)
 		
 		xhr.open('POST', url);
 		xhr.send({'jsondata':{
-			"id":0,
+			"class":"bookbook.domain.User",
+			"id":null,
 			"aboutMe":bioArea.value,
 			"activationMethod":"native",
-			"email":"",
-			"firstName":nameText.value,
-			"lastName":"",
-			"middleName":"null",
-			"password":username,
-			"userName":password,
-			"userTypeCode":"user"
+			//"createDate":"",
+			//"email":"",
+			//"endDate":"",
+			//"firstName":"",
+			"fullName":nameText.value,
+			//"lastLoginDate":"",
+			//"lastName":"",
+			"location":locationText.value,
+			//"middleName":"null",
+			"password":password,
+			//"photoUrl":"",
+			//"updateDate":null,
+			"userId":userId.value,
+			"userName":username,
+			//"userTypeCode":"user"
 		}}); 
+		
+		var urlPhoto = Ti.App.SERVICE_BASE_URL + 'user/'+username+'/photo';
+        	Ti.API.info('Preparing to send data to: ' + urlPhoto);
+		
+		var xhr3 = Titanium.Network.createHTTPClient();
+        	xhr3.open("POST",urlPhoto);  
+        	xhr3.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
+       		xhr3.send({myFile:profilePicManage.image});
+			xhr3.onerror = function()  {
+				win.setRightNavButton(done);
+				showValidationErrorDialog("Sorry, we could not upload this image.");
+			}
+			
+        	xhr3.onload = function() {
+        		win.setRightNavButton(done);
+			    var resp = this.responseText;  
+			    Ti.API.info(resp);
+			    if(!resp) { // no data returned means it was a success
+			    	g_doneDialog.show();
+			    	return;
+			    }
+			    else { // otherwise, there was an error
+			    	showValidationErrorDialog(resp);
+				}   	
+        	}
 		
 		Ti.UI.currentWindow.setRightNavButton(navActInd);
 		navActInd.show();

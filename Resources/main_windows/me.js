@@ -75,8 +75,10 @@ xhr.onload = function() {
 		    
 		    userData = JSON.parse(resp);
 
-			profileName.text = userData.firstName+" "+userData.lastName;
+			profileName.text = userData.fullName;
 			bioLabel.text = userData.aboutMe;
+			locationLabel.text = userData.location;
+			if(userData.photoUrl != ''){profilePic.image = userData.photoUrl;}
 		   }
 		  
 xhr.open('GET', url);
@@ -118,7 +120,8 @@ var locationLabel = Titanium.UI.createLabel({
 	top:'-5%',
 	height:'5%',
 	font:{fontSize:11},
-	left:'45%'
+	left:'45%',
+	width: '45%'
 });
 
 var bioLabel = Titanium.UI.createLabel({
@@ -247,37 +250,14 @@ Ti.App.addEventListener('saveProfileEvent', function() {
 
 			    userData2 = JSON.parse(resp2);
 			    
-				profileName.text = userData2.firstName+" "+userData2.lastName;
+				profileName.text = userData2.fullName;
 				bioLabel.text = userData2.aboutMe;
+				locationLabel.text = userData2.location;
+				alert(userData2.photoUrl);
+				profilePic.image = userData2.photoUrl;
 			   }
 			  
 	xhr2.open('GET', url);
 	xhr2.send();
-	
-	var urlPhoto = Ti.App.SERVICE_BASE_URL + 'user/'+username+'/photo';
-        	Ti.API.info('Preparing to send data to: ' + urlPhoto);
-          	
-        	var xhr3 = Titanium.Network.createHTTPClient();
-        	
-        	xhr3.open("POST",urlPhoto);  
-        	xhr3.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
-       		xhr3.send({myFile:g_profileImage});
-			xhr3.onerror = function()  {
-				win.setRightNavButton(done);
-				showValidationErrorDialog("Your account was created, but we had problems uploading your profile image.  Please log in and set your profile image from the settings screen.");
-			}
-			
-        	xhr3.onload = function() {
-        		win.setRightNavButton(done);
-			    var resp = this.responseText;  
-			    Ti.API.info(resp);
-			    if(!resp) { // no data returned means it was a success
-			    	g_doneDialog.show();
-			    	return;
-			    }
-			    else { // otherwise, there was an error
-			    	showValidationErrorDialog(resp);
-				}   	
-        	}
 });
 
