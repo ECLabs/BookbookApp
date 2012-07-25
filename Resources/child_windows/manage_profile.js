@@ -5,6 +5,7 @@
 	});
 	
 	var REQUEST_TIMEOUT = Ti.App.REQUEST_TIMEOUT;
+	var changepPhoto = false;
 	
 	var saveProfileButton = Titanium.UI.createButton({
 	title:'Save',
@@ -61,6 +62,8 @@ xhr.send();
 
 profilePicManage.addEventListener('click', function(e)
 {
+	changepPhoto = true;
+	
 Titanium.Media.openPhotoGallery({
 		success:function(event) {
 			var image = event.media;
@@ -281,30 +284,34 @@ saveProfileButton.addEventListener('click', function(e)
 			//"userTypeCode":"user"
 		}}); 
 		
-		var urlPhoto = Ti.App.SERVICE_BASE_URL + 'user/'+username+'/photo';
-        	Ti.API.info('Preparing to send data to: ' + urlPhoto);
 		
-		var xhr3 = Titanium.Network.createHTTPClient();
-        	xhr3.open("POST",urlPhoto);  
-        	xhr3.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
-       		xhr3.send({myFile:profilePicManage.image});
-			xhr3.onerror = function()  {
-				win.setRightNavButton(done);
-				showValidationErrorDialog("Sorry, we could not upload this image.");
-			}
+		if(changepPhoto == true)
+		{
+			var urlPhoto = Ti.App.SERVICE_BASE_URL + 'user/'+username+'/photo';
+	        	Ti.API.info('Preparing to send data to: ' + urlPhoto);
 			
-        	xhr3.onload = function() {
-        		win.setRightNavButton(done);
-			    var resp = this.responseText;  
-			    Ti.API.info(resp);
-			    if(!resp) { // no data returned means it was a success
-			    	g_doneDialog.show();
-			    	return;
-			    }
-			    else { // otherwise, there was an error
-			    	showValidationErrorDialog(resp);
-				}   	
-        	}
+			var xhr3 = Titanium.Network.createHTTPClient();
+	        	xhr3.open("POST",urlPhoto);  
+	        	xhr3.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
+	       		xhr3.send({myFile:profilePicManage.image});
+				xhr3.onerror = function()  {
+					win.setRightNavButton(done);
+					showValidationErrorDialog("Sorry, we could not upload this image.");
+				}
+				
+	        	xhr3.onload = function() {
+	        		win.setRightNavButton(done);
+				    var resp = this.responseText;  
+				    Ti.API.info(resp);
+				    if(!resp) { // no data returned means it was a success
+				    	g_doneDialog.show();
+				    	return;
+				    }
+				    else { // otherwise, there was an error
+				    	showValidationErrorDialog(resp);
+					}   	
+	        	}
+        }
 		
 		Ti.UI.currentWindow.setRightNavButton(navActInd);
 		navActInd.show();

@@ -133,19 +133,6 @@ var bioLabel = Titanium.UI.createLabel({
 	width: '90%'
 });
 
-if(Ti.Facebook.loggedIn) {
-	Ti.Facebook.requestWithGraphPath('me', {}, 'GET', function(e) {
-        if (e.success) {
-           Ti.API.info(e.result);
-            var fbdata = JSON.parse(e.result);
-            profileName.text = ""+fbdata.name;
-			locationLabel.text = ""+fbdata.locale;
-			bioLabel.text = "My name is "+fbdata.name+", I am a "+fbdata.gender+", and I love to read.";
-			profilePic.image = "http://graph.facebook.com/"+fbdata.username+"/picture";
-           }
-	});
-}
-
 // create table view data object
 var data = [
 	{title:'Currently Reading', hasChild:true, height:35, selectedColor:'#fff'},
