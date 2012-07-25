@@ -151,7 +151,6 @@ var data = [
 	{title:'Currently Reading', hasChild:true, height:35, selectedColor:'#fff'},
 	{title:'Want to Read', hasChild:true, height: 35, selectedColor:'#fff'},
 	{title:'Recently Read', hasChild:true, height: 35, selectedColor:'#fff'},
-	{title:'Read a While Ago', hasChild:true, height: 35, selectedColor:'#fff'}
 ];
 
 // create table view
@@ -160,7 +159,7 @@ var tableview = Titanium.UI.createTableView({
 	font:{fontSize:11},
 	top:'2%',
 	width: '90%',
-	height: 140,
+	height: 105,
 	borderWidth:1,
 	borderColor: '#888'
 });
@@ -253,7 +252,6 @@ Ti.App.addEventListener('saveProfileEvent', function() {
 				profileName.text = userData2.fullName;
 				bioLabel.text = userData2.aboutMe;
 				locationLabel.text = userData2.location;
-				alert(userData2.photoUrl);
 				profilePic.image = userData2.photoUrl;
 			   }
 			  

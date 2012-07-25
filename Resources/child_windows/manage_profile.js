@@ -210,7 +210,6 @@ var dataManage = [
 	{title:'Currently Reading', hasChild:true, height:35, selectedColor:'#fff'},
 	{title:'Want to Read', hasChild:true, height: 35, selectedColor:'#fff'},
 	{title:'Recently Read', hasChild:true, height: 35, selectedColor:'#fff'},
-	{title:'Read a While Ago', hasChild:true, height: 35, selectedColor:'#fff'}
 ];
 
 // create table view
@@ -219,7 +218,7 @@ var tableviewManage = Titanium.UI.createTableView({
 	font:{fontSize:11},
 	top:'49%',
 	width: '90%',
-	height: 140,
+	height: 105,
 	borderWidth:1,
 	borderColor: '#888'
 });
