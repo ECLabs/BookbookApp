@@ -182,6 +182,9 @@ else {
 		Ti.API.info(url);
 		xhr.open('GET', url);
 		xhr.send();
+		
+		Titanium.App.Properties.setString("username",usernameField.value);
+		Titanium.App.Properties.setString("password",passwordField.value);
 	});
 	
 	// Don't forget to set your appid and requested permissions, else the login button

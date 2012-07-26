@@ -85,6 +85,103 @@ commentArea.addEventListener('blur',function(e){
     }
 });
 
+var pickerLabel = Ti.UI.createLabel({
+	text: 'Select chapter(s) for this checkin',
+	left: '5%',
+	top: '2%'
+});
+
+var picker = Ti.UI.createPicker({
+	width: '25%',
+	top: '3%',
+	left: '5%',
+	textAlign: 'center'
+});
+
+var data = [];
+var i=0;
+for(i=0; i<99; i++) 
+{
+	data[i] = 	{title:''+(i+1),custom_item:'b',fontSize:18};
+}
+
+picker.add(data);
+// turn on the selection indicator (off by default)
+picker.selectionIndicator = true;
+
+var fbButton = Ti.UI.createButton({
+	title: 'Post to FaceBook',
+	width:'50%',
+	height: 50,
+	right: '5%',
+	top: -142
+});
+
+var twitterButton = Ti.UI.createButton({
+	title: 'Post to Twitter',
+	width:'50%',
+	height: 50,
+	right: '5%',
+	top: -118
+});
+
+var pickerValue;
+
+picker.addEventListener('change',function(e) {
+    pickerValue = e.row.title;
+});
+
+fbButton.addEventListener('click', function(e){
+	if(Ti.Facebook.loggedIn) {
+		var data = {
+            name:''+theTitle,
+            link:"http://mywebsite.com",
+            caption:'On Chapter:'+pickerValue,
+            description:''+commentArea.value,
+        };
+
+	 facebook_dialog = Titanium.Facebook.dialog(
+                    "feed", 
+                    data, 
+                    showRequestResult); 
+                    
+    function showRequestResult(r)
+    {
+        //alert(r)
+ 
+        if (r.result)
+        {
+            facebook_response = Ti.UI.createAlertDialog({
+                        title:'Facebook Shared!',
+                       message:'Your stream was published'
+                       });
+        }
+        else
+        {
+            facebook_response = Ti.UI.createAlertDialog({
+                           title:'Facebook Stream was cancelled',  
+                           message:'Nothing was published.'
+                         });
+ 
+        }
+        facebook_response.show();
+        var fb_resp_timeout = setTimeout(function(){
+            facebook_response.hide();
+        }, 2000);
+    }
+	}
+	
+	else
+	{
+		
+	}
+});
+
+
 statView.add(title);
 statView.add(commentArea);
+statView.add(pickerLabel);
+statView.add(picker);
+statView.add(fbButton);
+statView.add(twitterButton);
 win.add(statView);

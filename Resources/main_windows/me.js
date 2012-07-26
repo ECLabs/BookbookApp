@@ -11,6 +11,8 @@ var scrollArea3 = Titanium.UI.createScrollView({
 }); 
 win.add(scrollArea3);
 
+var REQUEST_TIMEOUT = Ti.App.REQUEST_TIMEOUT;
+		   
 var statsTable = Titanium.UI.createTableView();
 
 scrollArea3.add(statsTable);
@@ -53,9 +55,48 @@ var statView3 = Titanium.UI.createView({
 			top:5, right:5, bottom:5, left:5 }); 
 statView3.add(checkinCountLabel)
 
+var profilePic = Titanium.UI.createImageView({
+	image:'http://www.appcelerator.com/wp-content/uploads/2009/06/titanium_desk.png',
+	height:'30%',
+	width: '35%',
+	top:'-7%',
+	left:'5%',
+});
+
+var username = Titanium.App.Properties.getString("username");
+var userData;
+var resp;
+
+var url = Ti.App.SERVICE_BASE_URL + 'user/'+username;
+var xhr = Titanium.Network.createHTTPClient();
+xhr.onload = function() {
+		    resp = this.responseText;
+		    Ti.API.info(resp);
+		    
+		    userData = JSON.parse(resp);
+
+			profileName.text = userData.fullName;
+			bioLabel.text = userData.aboutMe;
+			locationLabel.text = userData.location;
+			if(userData.photoUrl != ''){profilePic.image = userData.photoUrl;}
+		   }
+		  
+xhr.open('GET', url);
+xhr.send();
+
+var profileName = Titanium.UI.createLabel({
+	id:'curReadLabel',
+	text:'',
+	top:'-20%',
+	height:'10%',
+	left:'45%',
+	font:{fontSize:18, fontStyle:'bold'},
+	width: '50%'
+});
+
 var editProfileButton = Titanium.UI.createButton({
 	title:'Edit',
-	height:'7%',
+	height:25,
 	width:'21%',
 	top:0,
 	right:'5%',
@@ -63,68 +104,59 @@ var editProfileButton = Titanium.UI.createButton({
 	color: '#000000'
 });
 
-var profilePic = Titanium.UI.createImageView({
-	image:'http://www.appcelerator.com/wp-content/uploads/2009/06/titanium_desk.png',
-	height:'30%',
-	width:'35%',
-	top:'-7%',
-	left:'5%',
-	borderWidth:1
+editProfileButton.addEventListener('click', function(e)
+{
+	var editProfileWin = Titanium.UI.createWindow({
+		url:'../child_windows/manage_profile.js',
+    	title: 'Book Detail',
+	});
+	
+	Titanium.UI.currentTab.open(editProfileWin,{animated:true});	
 });
 
-var profileName = Titanium.UI.createLabel({
-	id:'curReadLabel',
-	text:'My Name',
-	top:'-20%',
-	height:'10%',
+var locationLabel = Titanium.UI.createLabel({
+	id:'locationLabel',
+	text:'Location',
+	top:'-5%',
+	height:'5%',
+	font:{fontSize:11},
 	left:'45%',
-	font:{fontSize:18, fontStyle:'bold'}
+	width: '45%'
 });
 
-var curReadLabel = Titanium.UI.createLabel({
-	id:'curReadLabel',
-	text:'Currently Reading',
-	top:'5%',
+var bioLabel = Titanium.UI.createLabel({
+	id:'bioLabel',
+	text:'',
 	height:'5%',
-	font:{fontSize:12},
-	left:'5%'
+	font:{fontSize:11},
+	left:'5%',
+	width: '90%'
 });
 
-var recReadLabel = Titanium.UI.createLabel({
-	id:'recReadLabel',
-	text:'Recently Read',
-	top:'10%',
-	height:'5%',
-	font:{fontSize:12},
-	left:'5%'
-});
+// create table view data object
+var data = [
+	{title:'Currently Reading', hasChild:true, height:35, selectedColor:'#fff'},
+	{title:'Want to Read', hasChild:true, height: 35, selectedColor:'#fff'},
+	{title:'Recently Read', hasChild:true, height: 35, selectedColor:'#fff'},
+];
 
-var readAWhileLabel = Titanium.UI.createLabel({
-	id:'readAWhileLabel',
-	text:'Read a while ago',
-	top:'12%',
-	height:'5%',
-	font:{fontSize:12},
-	left:'5%'
+// create table view
+var tableview = Titanium.UI.createTableView({
+	data:data,
+	font:{fontSize:11},
+	top:'2%',
+	width: '90%',
+	height: 105,
+	borderWidth:1,
+	borderColor: '#888'
 });
-
-var readWantLabel = Titanium.UI.createLabel({
-	id:'readWantLabel',
-	text:'Want to Read',
-	top:'15%',
-	height:'5%',
-	font:{fontSize:12},
-	left:'5%'
-});
-
 
 statView1.add(editProfileButton);
 statView1.add(profilePic);
 statView1.add(profileName);
-statView1.add(curReadLabel);
-statView1.add(recReadLabel);
-statView1.add(readAWhileLabel);
-statView1.add(readWantLabel);
+statView1.add(locationLabel);
+statView1.add(bioLabel);
+statView1.add(tableview);
 		
 var totalFriendsRow = Titanium.UI.createTableViewRow({height:'auto', backgroundColor:'#f00'});
 totalFriendsRow.add(statView1);
@@ -190,4 +222,27 @@ function closeThisWindow() {
 	 */
 	Ti.App.fireEvent('closeMainTabGroup');
 }
+
+Ti.App.addEventListener('saveProfileEvent', function() {
+	var username = Titanium.App.Properties.getString("username");
+	var userData2;
+	var resp2;
+	
+	var url2 = Ti.App.SERVICE_BASE_URL + 'user/'+username;
+	var xhr2 = Titanium.Network.createHTTPClient();
+	xhr2.onload = function() {
+			    resp2 = this.responseText;
+			    Ti.API.info(resp2);
+
+			    userData2 = JSON.parse(resp2);
+			    
+				profileName.text = userData2.fullName;
+				bioLabel.text = userData2.aboutMe;
+				locationLabel.text = userData2.location;
+				profilePic.image = userData2.photoUrl;
+			   }
+			  
+	xhr2.open('GET', url);
+	xhr2.send();
+});
 
