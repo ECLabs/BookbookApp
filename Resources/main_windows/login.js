@@ -12,15 +12,8 @@ if(Ti.Facebook.loggedIn) {
 			Ti.API.info(e.result);
 			
 			var fbdata = JSON.parse(e.result);
-			//var fb_updated_time = new Date(fbdata.updated_time);
-			var bu_response = doFbLogin(fbdata);
-			//var bookup_updated_time = new Date(bu_response);
-			/*
-			if(fb_updated_time.getTime() > bookup_updated_time.getTime())
-			{
-				fbUpdatePicture(fbdata.username);
-			}
-			*/
+			var resp = doFbLogin(fbdata);
+			Ti.API.info("BookUp login successful.  JSON returned is " + resp);
 			win.close();
             
         } else if (e.error) {
@@ -194,16 +187,11 @@ else {
 	    	Ti.API.info('Logged In via Facebook. Checking BookUp credentials');
 	    	Ti.Facebook.requestWithGraphPath('me', {}, 'GET', function(e) {
 		        if (e.success) {
-		            Ti.API.info(e.result);
+		            Ti.API.info("Facebook response: " + e.result);
 		            var fbdata = JSON.parse(e.result);
-		            
-		            doFbLogin(fbdata);
-		            
+		            var resp = doFbLogin(fbdata);
+					Ti.API.info("BookUp login successful.  JSON returned is " + resp);
 		         	win.close();
-		            //alert(fbdata.id);
-		            // does the user's account already exist?
-		            // if so, check the updated_time and update BookUp's data if newer
-		            // otherwise, register the user
 		            
 		        } else if (e.error) {
 		            alert(e.error);
@@ -211,7 +199,6 @@ else {
 		            alert('Unknown response');
 		        }
 		    });
-	        //win.close();
 	    }
 	});
 	Ti.Facebook.addEventListener('logout', function(e) {
@@ -321,52 +308,11 @@ function doFbLogin(fbdata) {
 		"activationMethod":"facebook",
 		"email":fbdata.email,
 		"userName":fbdata.username,
-		//"firstName":fbdata.first_name,
-		//"lastName":fbdata.last_name,
-		//"middleName":"null",
-		//"password":passwordField.value,
 		"fullName":fbdata.name,
-		//"userName":usernameField.value,
 		"userTypeCode":"user",
 		"gender":fbdata.gender,
 		"facebookUpdateTime":fbdata.updated_time,
 		"location":fbdata.location,
 		"picture":Ti.Utils.base64encode(fbProfilePictureImageView.toBlob())
 	}});
-}
-
-function fbUpdatePicture(fbusername) {
-	var urlPhoto = Ti.App.SERVICE_BASE_URL + 'user/'+fbusername+'/photo';
-	Ti.Facebook.requestWithGraphPath('me/picture?type=large', {}, 'GET', function(e) {
-        if (e.success) {
-            var xhr2 = Titanium.Network.createHTTPClient();
-
-			fbProfilePictureImageView.image = "http://graph.facebook.com/"+fbusername+"/picture";
-			
-        	xhr2.open("POST",urlPhoto);  
-        	xhr2.setTimeout(Ti.App.REQUEST_TIMEOUT); // 10 second timeout
-       		xhr2.send({myFile:fbProfilePictureImageView.toBlob()});
-			xhr2.onerror = function()  {
-				Ti.API.info("We had problems uploading your profile image.");
-				return false;
-			}
-			
-        	xhr2.onload = function() {
-			    var resp = this.responseText;  
-			    Ti.API.info(resp);
-			    if(!resp) { // no data returned means it was a success
-			    	return true;
-			    }
-			    else { // otherwise, there was an error
-			    	Ti.API.info("We had problems uploading your profile image. 2");
-			    	return false;
-				}   	
-        	}
-        } else if (e.error) {
-            alert(e.error);
-        } else {
-            alert('Unknown response');
-        }
-        return false;
-    });
 }
