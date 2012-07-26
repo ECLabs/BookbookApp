@@ -1,7 +1,7 @@
 var win = Ti.UI.currentWindow; 
 var GLOBAL_BUTTON_WIDTH = 290;
 Ti.Facebook.appid = '235098559884877';
-Ti.Facebook.permissions = ['user_about_me','email','publish_stream'];
+Ti.Facebook.permissions = ['user_about_me','email','publish_stream','user_location'];
 var fbProfilePictureImageView = Titanium.UI.createImageView();
 
 // is the user already logged in to facebook?
@@ -9,18 +9,19 @@ if(Ti.Facebook.loggedIn) {
 	Ti.API.info("user is already logged in to facebook.  Data:");
     Ti.Facebook.requestWithGraphPath('me', {}, 'GET', function(e) {
         if (e.success) {
-           Ti.API.info(e.result);
-           win.close();
-           return; // remove this when the backend is working
-            var fbdata = JSON.parse(e.result);
-            var fb_updated_time = new Date(fbdata.updated_time);
-            var bu_response = doFbLogin(fbdata);
-            var bookup_updated_time = new Date(bu_response);
-            if(fb_updated_time.getTime() > bookup_updated_time.getTime())
-            {
-            	fbUpdatePicture(fbdata.username);
-            }
-            win.close();
+			Ti.API.info(e.result);
+			
+			var fbdata = JSON.parse(e.result);
+			//var fb_updated_time = new Date(fbdata.updated_time);
+			var bu_response = doFbLogin(fbdata);
+			//var bookup_updated_time = new Date(bu_response);
+			/*
+			if(fb_updated_time.getTime() > bookup_updated_time.getTime())
+			{
+				fbUpdatePicture(fbdata.username);
+			}
+			*/
+			win.close();
             
         } else if (e.error) {
             alert(e.error);
@@ -193,6 +194,8 @@ else {
 		            Ti.API.info(e.result);
 		            var fbdata = JSON.parse(e.result);
 		            
+		            doFbLogin(fbdata);
+		            
 		         	win.close();
 		            //alert(fbdata.id);
 		            // does the user's account already exist?
@@ -310,20 +313,22 @@ function doFbLogin(fbdata) {
 	xhr.open('POST', url);
 	xhr.send({'jsondata':{
 		//"id":0,
-		"fbid":fbdata.id,
-		"aboutMe":fbdata.link,
+		"facebookId":fbdata.id,
+		"aboutMe":fbdata.bio,
 		"activationMethod":"facebook",
 		"email":fbdata.email,
-		"username":fbdata.username,
-		"firstName":fbdata.first_name,
-		"lastName":fbdata.last_name,
+		"userName":fbdata.username,
+		//"firstName":fbdata.first_name,
+		//"lastName":fbdata.last_name,
 		//"middleName":"null",
 		//"password":passwordField.value,
-		"userName":usernameField.value,
+		"fullName":fbdata.name,
+		//"userName":usernameField.value,
 		"userTypeCode":"user",
 		"gender":fbdata.gender,
-		"update_time_facebook":fbdata.updated_time,
-		"picture":fbProfilePictureImageView.toBlob()
+		"facebookUpdateTime":fbdata.updated_time,
+		"location":fbdata.location,
+		"picture":Ti.Utils.base64encode(fbProfilePictureImageView.toBlob())
 	}});
 }
 
