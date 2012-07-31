@@ -144,13 +144,17 @@ else {
 		    var resp = this.responseText;
 		    
 		    Ti.API.info(resp);
-		    if(resp == 'Login successful!') {
+		    
+		   	// if 'userId' is in the return string, it must be the user JSON
+		    if(resp.indexOf('userId') > -1) {
+		    	var user = JSON.parse(resp);
+		   		Ti.API.info("Login successful.  User ID is " + user.userId);
 		    	errorLabel.text = '';
-		    	g_username = usernameField.value;
+		    	g_username = user.userName;
 		    	win.close();
 		    	
 		    }
-		    else {	
+		    else {	// otherwise there was an error
 		    	errorLabel.text = resp;
 		    	if(resp.indexOf('username') > -1) {
 		    		usernameField.setBackgroundColor('red');
