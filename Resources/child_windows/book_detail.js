@@ -94,9 +94,33 @@ var bookInfo = Titanium.UI.createLabel({
 	font:{fontSize:14}
 });
 
+var readingButton = Titanium.UI.createButton({
+	title:"Reading",
+	height: 15,
+	left: 10,
+	top:10,
+	font:{fontSize:10}
+});
+
+var commentsButton = Titanium.UI.createButton({
+	title:"Comments",
+	height: 15,
+	left: 120,
+	top: -15,
+	font:{fontSize:10}
+});
+
+var readingItButton = Titanium.UI.createButton({
+	title:"Reading It",
+	height: 15,
+	right: 10,
+	top: -15,
+	font:{fontSize:10}
+});
+
 var recentActivity = Titanium.UI.createLabel({
 	text:"  Recent Activity",
-	top:30,
+	top:10,
 	height:30,
 	left:0,
 	width:'100%',
@@ -199,6 +223,9 @@ today.add(borderBottom);
 statView.add(title);
 statView.add(image);
 statView.add(bookInfo);
+statView.add(readingButton);
+statView.add(commentsButton);
+statView.add(readingItButton);
 statView.add(recentActivity);
 statView.add(commentButton);
 statView.add(moreButton);
