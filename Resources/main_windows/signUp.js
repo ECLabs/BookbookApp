@@ -114,7 +114,8 @@ row.addEventListener('click', function(e)
 		    Ti.API.info(image.height +' x '+ image.width);
         	imageView.setImage(image);
         	Ti.API.info(image.height + " x " + image.width);        	
-        	g_profileImage = image;   
+        	//g_profileImage = image;   
+        	g_profileImage = Ti.Utils.base64encode(imageView.toBlob())
 		}
 	});
 });
@@ -194,8 +195,8 @@ done.addEventListener('click',function(e) {
 	var url = Ti.App.SERVICE_BASE_URL + 'user';
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
-	xhr.onerror = function() {
-		
+	xhr.onerror = function(e) {
+		Ti.API.info(e);
 		win.setRightNavButton(done);
 		showValidationErrorDialog("Unable to sign you up.  BookUp Web Services are currently unavailable.  Please try again soon.");
 	}
@@ -212,11 +213,11 @@ done.addEventListener('click',function(e) {
 	    }
 	    else { // successful
 	    	// if the profile image has not be selected by the user, just complete the process
-	    	if(g_profileImage == null) {
+	    	//if(g_profileImage == null) {
 	    		g_doneDialog.show();
 	    		return;
-	    	}
-	    	
+	    	//}
+	    	/*
 	    	var urlPhoto = Ti.App.SERVICE_BASE_URL + 'user/'+responseObject.userName+'/photo';
         	Ti.API.info('Preparing to send data to: ' + urlPhoto);
         	win.setRightNavButton(spinnerButton);
@@ -243,8 +244,10 @@ done.addEventListener('click',function(e) {
 			    	showValidationErrorDialog(resp);
 				}   	
         	}
+        	*/
 	    }
 	};
+
 
 	Ti.API.debug(url);
 	xhr.open('POST', url);
@@ -258,7 +261,8 @@ done.addEventListener('click',function(e) {
 		"middleName":"null",
 		"password":passwordField.value,
 		"userName":usernameField.value,
-		"userTypeCode":"user"
+		"userTypeCode":"user",
+		"picture":g_profileImage
 	}}); 
 	
 	//xhr.send({'jsondata':{"class":"bookbook.domain.User","id":null,"aboutMe":"","activationMethod":"native","createDate":"Sat Nov 12 01:39:32 EST 2011","email":"","endDate":null,"firstName":"Barack","lastLoginDate":null,"lastName":"Obama","middleName":"","password":"","photoUrl":"http://localhost:8080/Bookbook/images/maxavatar.jpg","updateDate":null,"userId":179,"userName":"yeswecan","userTypeCode":"user"}});
