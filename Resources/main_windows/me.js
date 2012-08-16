@@ -63,28 +63,8 @@ var profilePic = Titanium.UI.createImageView({
 	left:'5%',
 });
 
-//var username = Titanium.App.Properties.getString("username");
 var userData;
 var resp;
-
-/*
-var url = Ti.App.SERVICE_BASE_URL + 'user/'+username;
-var xhr = Titanium.Network.createHTTPClient();
-xhr.onload = function() {
-		    resp = this.responseText;
-		    Ti.API.info(resp);
-		    
-		    userData = JSON.parse(resp);
-
-			profileName.text = userData.fullName;
-			bioLabel.text = userData.aboutMe;
-			locationLabel.text = userData.location;
-			if(userData.photoUrl != ''){profilePic.image = userData.photoUrl;}
-		   }
-		  
-xhr.open('GET', url);
-xhr.send();
-*/
 
 var profileName = Titanium.UI.createLabel({
 	id:'curReadLabel',
