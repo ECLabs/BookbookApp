@@ -1,5 +1,5 @@
 var win = Ti.UI.currentWindow;  
-  
+
 //Create the scroll area, all our content goes in here  
 var scrollArea3 = Titanium.UI.createScrollView({  
     top: 55,  
@@ -63,10 +63,11 @@ var profilePic = Titanium.UI.createImageView({
 	left:'5%',
 });
 
-var username = Titanium.App.Properties.getString("username");
+//var username = Titanium.App.Properties.getString("username");
 var userData;
 var resp;
 
+/*
 var url = Ti.App.SERVICE_BASE_URL + 'user/'+username;
 var xhr = Titanium.Network.createHTTPClient();
 xhr.onload = function() {
@@ -83,6 +84,7 @@ xhr.onload = function() {
 		  
 xhr.open('GET', url);
 xhr.send();
+*/
 
 var profileName = Titanium.UI.createLabel({
 	id:'curReadLabel',
@@ -223,26 +225,16 @@ function closeThisWindow() {
 	Ti.App.fireEvent('closeMainTabGroup');
 }
 
+profileName.text = Ti.App.CurrentUser.fullName;
+bioLabel.text = Ti.App.CurrentUser.aboutMe;
+locationLabel.text = Ti.App.CurrentUser.location;
+if(Ti.App.CurrentUser.photoUrl != ''){profilePic.image = Ti.App.CurrentUser.photoUrl;}
+
 Ti.App.addEventListener('saveProfileEvent', function() {
-	var username = Titanium.App.Properties.getString("username");
-	var userData2;
-	var resp2;
-	
-	var url2 = Ti.App.SERVICE_BASE_URL + 'user/'+username;
-	var xhr2 = Titanium.Network.createHTTPClient();
-	xhr2.onload = function() {
-			    resp2 = this.responseText;
-			    Ti.API.info(resp2);
-
-			    userData2 = JSON.parse(resp2);
-			    
-				profileName.text = userData2.fullName;
-				bioLabel.text = userData2.aboutMe;
-				locationLabel.text = userData2.location;
-				profilePic.image = userData2.photoUrl;
-			   }
-			  
-	xhr2.open('GET', url);
-	xhr2.send();
+	Ti.API.info("in eventListener for 'saveProfileEvent'");
+	var currUser = Ti.App.CurrentUser;    
+	profileName.text = currUser.fullName;
+	bioLabel.text = currUser.aboutMe;
+	locationLabel.text = currUser.location;
+	profilePic.image = currUser.photoUrl;
 });
-

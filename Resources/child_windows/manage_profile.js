@@ -1,10 +1,21 @@
+var win = Ti.UI.currentWindow;
+var currUser = Ti.App.CurrentUser;
+var REQUEST_TIMEOUT = Ti.App.REQUEST_TIMEOUT;
+
+win.addEventListener('open', function(e) {
+	currUser = Ti.App.CurrentUser;
+	nameText.value = currUser.fullName;
+	bioArea.value = currUser.aboutMe;
+	userId.value = currUser.userId;
+	locationText.value = currUser.location;
+});
 
 	var scrollWin = Titanium.UI.createScrollView({
 		width: '100%',
 		height: '100%'
 	});
 	
-	var REQUEST_TIMEOUT = Ti.App.REQUEST_TIMEOUT;
+
 	var changepPhoto = false;
 	
 	var saveProfileButton = Titanium.UI.createButton({
@@ -34,6 +45,7 @@ var password = Titanium.App.Properties.getString("password");
 var userData;
 var resp;
 
+/*
 var url = Ti.App.SERVICE_BASE_URL + 'user/'+username;
 var xhr = Titanium.Network.createHTTPClient();
 xhr.onload = function() {
@@ -51,7 +63,7 @@ xhr.onload = function() {
 		  
 xhr.open('GET', url);
 xhr.send();
-	
+	*/
 	var profilePicManage = Titanium.UI.createImageView({
 	image:'http://www.appcelerator.com/wp-content/uploads/2009/06/titanium_desk.png',
 	height:'30%',
@@ -60,21 +72,22 @@ xhr.send();
 	left:'5%',
 });
 
+
 profilePicManage.addEventListener('click', function(e)
 {
 	changepPhoto = true;
 	
-Titanium.Media.openPhotoGallery({
-		success:function(event) {
-			var image = event.media;
-		    Ti.API.info(image.height +' x '+ image.width);
-        	profilePicManage.image = image;
-        	Ti.API.info(image.height + " x " + image.width);        	   
-  
-        	profilePicManage.image = image;
-		}
+	Titanium.Media.openPhotoGallery({
+			success:function(event) {
+				var image = event.media;
+			    Ti.API.info(image.height +' x '+ image.width);
+	        	profilePicManage.image = image;
+	        	Ti.API.info(image.height + " x " + image.width);        	   
+	  
+	        	profilePicManage.image = image;
+			}
+		});
 	});
-});
 	
 	var aboutMeButton = Titanium.UI.createButton({
 	title:'About Me',
@@ -259,35 +272,30 @@ saveProfileButton.addEventListener('click', function(e)
 		xhr.onload = function() {
 		    var resp = this.responseText;  
 		    Ti.API.info(resp);
+		    
+		    var user = JSON.parse(resp);
+		    Ti.App.CurrentUser = user;
+		    Ti.App.fireEvent('saveProfileEvent');
 		}
 		
 		xhr.open('POST', url);
-		xhr.send({'jsondata':{
-			"class":"bookbook.domain.User",
-			"id":null,
-			"aboutMe":bioArea.value,
-			"activationMethod":"native",
-			//"createDate":"",
-			//"email":"",
-			//"endDate":"",
-			//"firstName":"",
-			"fullName":nameText.value,
-			//"lastLoginDate":"",
-			//"lastName":"",
-			"location":locationText.value,
-			//"middleName":"null",
-			"password":password,
-			//"photoUrl":"",
-			//"updateDate":null,
-			"userId":userId.value,
-			"userName":username,
-			//"userTypeCode":"user"
-		}}); 
+		
+		currUser.aboutMe = bioArea.value;
+		currUser.fullName = nameText.value;
+		currUser.location = locationText.value;
+		//currUSer.password = password;
+		//currUser.userName = username;
+		
+		var obj = ({'jsondata':currUser});
+		Ti.API.info('JSON data about to be sent for update user -->');
+		Ti.API.info(JSON.stringify(obj));
+		
+		xhr.send(obj); 
 		
 		
 		if(changepPhoto == true)
 		{
-			var urlPhoto = Ti.App.SERVICE_BASE_URL + 'user/'+username+'/photo';
+			var urlPhoto = Ti.App.SERVICE_BASE_URL + 'user/userId-'+currUser.userId+'/photo';
 	        	Ti.API.info('Preparing to send data to: ' + urlPhoto);
 			
 			var xhr3 = Titanium.Network.createHTTPClient();
@@ -323,3 +331,10 @@ saveProfileButton.addEventListener('click', function(e)
 			Ti.UI.currentWindow.close();
 		},3000);
 	});
+	
+	
+	nameText.value = currUser.fullName;
+	bioArea.value = currUser.aboutMe;
+	userId.value = currUser.userId;
+	locationText.value = currUser.location;
+	if(currUser.photoUrl != ''){profilePicManage.image = currUser.photoUrl;}

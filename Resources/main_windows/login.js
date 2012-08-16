@@ -13,8 +13,6 @@ if(Ti.Facebook.loggedIn) {
 			
 			var fbdata = JSON.parse(e.result);
 			var resp = doFbLogin(fbdata);
-			Ti.API.info("BookUp login successful.  JSON returned is " + resp);
-			win.close();
             
         } else if (e.error) {
             alert(e.error);
@@ -151,6 +149,7 @@ else {
 		   		Ti.API.info("Login successful.  User ID is " + user.userId);
 		    	errorLabel.text = '';
 		    	g_username = user.userName;
+		    	Ti.App.CurrentUser = user;
 		    	win.close();
 		    	
 		    }
@@ -292,6 +291,10 @@ function doFbLogin(fbdata) {
 	    	return false;
 	    }
 	    else {
+	    	var user = JSON.parse(resp);
+	    	Ti.App.CurrentUser = user;
+			Ti.API.info("BookUp login successful.  Closing window.  JSON returned is " + resp);			
+			win.close();
 	    	return resp;	    	
 	    }
 	};
