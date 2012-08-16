@@ -1,6 +1,6 @@
 // Globals
-//Ti.App.SERVICE_BASE_URL='http://labs.evanschambers.com:8080/Bookbook/api/';
-Ti.App.SERVICE_BASE_URL='http://localhost:8080/Bookbook/api/';
+Ti.App.SERVICE_BASE_URL='http://labs.evanschambers.com:8080/Bookbook/api/';
+//Ti.App.SERVICE_BASE_URL='http://localhost:8080/Bookbook/api/';
 Ti.App.REQUEST_TIMEOUT = 5000;
 Ti.App.CurrentUser = null;
 
