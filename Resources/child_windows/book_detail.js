@@ -5,10 +5,7 @@ var tab;
 
 var tabGroup = Ti.UI.createTabGroup();
 
-var theTitle = Titanium.UI.currentWindow.bookTitle;
-var theAuthor = Titanium.UI.currentWindow.bookAuthor;
-var theDesc = Titanium.UI.currentWindow.bookDesc;
-var theImage = Titanium.UI.currentWindow.bookImage;
+var bookObject = Titanium.UI.currentWindow.bookObject;
 
 var backButton = Titanium.UI.createButton({
     title:'Back',
@@ -33,7 +30,7 @@ checkinButton.addEventListener('click',function()
 				    backButtonTitle:'test'
 				});
 				
-	checkInWin.bookTitle = theTitle;
+	checkInWin.bookObject = bookObject;
 	
 					tab = Ti.UI.createTab({
 					    title:"Doesn't matter",
@@ -69,7 +66,7 @@ var statView = Titanium.UI.createView({
 			top:0, right:0, bottom:0, left:0 }); 
 
 var title = Titanium.UI.createLabel({
-	text:"  "+theTitle,
+	text:"  "+bookObject.title,
 	top:0,
 	height:30,
 	left:0,
@@ -80,16 +77,16 @@ var title = Titanium.UI.createLabel({
 });
 
 var image = Titanium.UI.createImageView({
-	image: theImage,
+	image: bookObject.smallThumbnailUrl,
 	top: -20,
 	right: 20
 });
 
 var bookInfo = Titanium.UI.createLabel({
-	text:"By: "+theAuthor+"\n"+theDesc,
+	text:"By: "+bookObject.author+"\n"+bookObject.description,
 	left: 10,
 	top: -55,
-	width: '74%',
+	width: '72%',
 	height: 70,
 	font:{fontSize:14}
 });
@@ -150,7 +147,7 @@ commentButton.addEventListener('click',function()
 				    backButtonTitle:'test'
 				});
 				
-	commentWin.bookTitle = theTitle;
+	commentWin.bookObject = bookObject;
 	
 					tab = Ti.UI.createTab({
 					    title:"Doesn't matter",

@@ -1,7 +1,9 @@
 var win = Ti.UI.currentWindow;  
 win.layout = 'vertical'
 
-var theTitle = Titanium.UI.currentWindow.bookTitle;
+var REQUEST_TIMEOUT = Ti.App.REQUEST_TIMEOUT;
+
+var bookObject = Titanium.UI.currentWindow.bookObject;
 
 var backButton = Titanium.UI.createButton({
     title:'Back',
@@ -30,7 +32,7 @@ var statView = Titanium.UI.createView({
 			top:0, right:0, bottom:0, left:0 }); 
 
 var title = Titanium.UI.createLabel({
-	text:"  "+theTitle,
+	text:"  "+bookObject.title,
 	top:0,
 	height:30,
 	left:0,
@@ -131,10 +133,48 @@ picker.addEventListener('change',function(e) {
     pickerValue = e.row.title;
 });
 
+twitterButton.addEventListener('click', function(e){
+	var url = Ti.App.SERVICE_BASE_URL + 'book';
+	var xhr = Titanium.Network.createHTTPClient();
+	xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
+	xhr.onerror = function(e) {
+		Ti.API.info(e);
+		showValidationErrorDialog("Unable to add this book.  BookUp Web Services are currently unavailable.  Please try again soon.");
+	}
+	xhr.onload = function() {
+	    var resp = this.responseText;  
+	    Ti.API.info(resp);
+	    
+	    var responseObject = eval('('+resp+')');
+	    if(responseObject.error) { // backend error message
+	    	showValidationErrorDialog(responseObject.error);
+	    }
+	    else { // successful
+	    		g_doneDialog.show();
+	    		return;
+	    }
+	};
+
+
+	Ti.API.debug(url);
+	xhr.open('POST', url);
+	xhr.send({'jsondata':{
+		"description":bookObject.description,
+		"author":bookObject.author,
+		"title":bookObject.title,
+		"isbn10":bookObject.isbn10,
+		"smallThumbnailUrl":bookObject.smallThumbnailUrl,
+		"thumbnailUrl":bookObject.thumbnailUrl,
+		"source":"googlebooks",
+		"pubType":"book"
+	}}); 
+	
+});
+
 fbButton.addEventListener('click', function(e){
 	if(Ti.Facebook.loggedIn) {
 		var data = {
-            name:''+theTitle,
+            name:''+bookObject.title,
             link:"http://mywebsite.com",
             caption:'On Chapter:'+pickerValue,
             description:''+commentArea.value,

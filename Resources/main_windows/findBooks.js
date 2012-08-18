@@ -233,28 +233,20 @@ searchBar.addEventListener('return', function(e) {
 				var bookauthor;
 				var bookdesc;
 				var bookimage;
+				var jsonBookObject;
 				
 				//check to see if child was clicked
 				if(this.id == null)
 				{
-					booktitle = jsonObject[this.parent.id].title;
-					bookauthor = jsonObject[this.parent.id].author;
-					bookdesc = jsonObject[this.parent.id].description;
-					bookimage = jsonObject[this.parent.id].smallThumbnailUrl;
+					jsonBookObject = jsonObject[this.parent.id];
 				}  //child clicked
 				
 				else
 				{
-					booktitle = jsonObject[this.id].title;
-					bookauthor = jsonObject[this.id].author;
-					bookdesc = jsonObject[this.id].description;
-					bookimage = jsonObject[this.id].smallThumbnailUrl;
+					jsonBookObject = jsonObject[this.id];
 				}  //row background clicked
 				
-				book_detail.bookTitle = booktitle;
-				book_detail.bookAuthor = bookauthor;
-				book_detail.bookDesc = bookdesc;
-				book_detail.bookImage = bookimage;
+				book_detail.bookObject = jsonBookObject;
 				
 				tab = Ti.UI.createTab({
 					    title:"Doesn't matter",
