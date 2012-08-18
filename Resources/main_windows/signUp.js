@@ -115,7 +115,7 @@ row.addEventListener('click', function(e)
         	imageView.setImage(image);
         	Ti.API.info(image.height + " x " + image.width);        	
         	//g_profileImage = image;   
-        	g_profileImage = Ti.Utils.base64encode(imageView.toBlob())
+        	g_profileImage = Ti.Utils.base64encode(imageView.toBlob()).toString()
 		}
 	});
 });
