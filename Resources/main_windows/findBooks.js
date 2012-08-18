@@ -1,6 +1,8 @@
 var win = Ti.UI.currentWindow;  
 win.layout = 'vertical'
 
+var REQUEST_TIMEOUT = Ti.App.REQUEST_TIMEOUT;
+
 var count = 0;
 var tab;
 
@@ -229,10 +231,6 @@ searchBar.addEventListener('return', function(e) {
 				    backButtonTitle:'test'
 				});
 				
-				var booktitle;
-				var bookauthor;
-				var bookdesc;
-				var bookimage;
 				var jsonBookObject;
 				
 				//check to see if child was clicked
@@ -252,6 +250,42 @@ searchBar.addEventListener('return', function(e) {
 					    title:"Doesn't matter",
 					    window: book_detail
 					});
+					
+				//Add book to the database
+				var url = Ti.App.SERVICE_BASE_URL + 'book';
+				var xhr = Titanium.Network.createHTTPClient();
+				xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
+				xhr.onerror = function(e) {
+					Ti.API.info(e);
+					showValidationErrorDialog("Unable to add this book.  BookUp Web Services are currently unavailable.  Please try again soon.");
+				}
+				xhr.onload = function() {
+				    var resp = this.responseText;  
+				    Ti.API.info(resp);
+				    
+				    var responseObject = eval('('+resp+')');
+				    if(responseObject.error) { // backend error message
+				    	showValidationErrorDialog(responseObject.error);
+				    }
+				    else { // successful
+				    		g_doneDialog.show();
+				    		return;
+				    }
+				};
+			
+			
+				Ti.API.debug(url);
+				xhr.open('POST', url);
+				xhr.send({'jsondata':{
+					"description":jsonBookObject.description,
+					"author":jsonBookObject.author,
+					"title":jsonBookObject.title,
+					"isbn10":jsonBookObject.isbn10,
+					"smallThumbnailUrl":jsonBookObject.smallThumbnailUrl,
+					"thumbnailUrl":jsonBookObject.thumbnailUrl,
+					"source":"googlebooks",
+					"pubType":"book"
+				}}); 
 				
 				tabGroup.addTab(tab);	
 				tabGroup.open();
