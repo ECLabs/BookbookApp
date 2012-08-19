@@ -158,11 +158,11 @@ twitterButton.addEventListener('click', function(e){
 	Ti.API.debug(url);
 	xhr.open('POST', url);
 	xhr.send({'jsondata':{
-		"chapterOrSection":5,//pickerValue,
+		"chapterOrSection":pickerValue,
 		"latitude":"null",
 		"longitude":"null",
-		"narritive":"I love this book",//commentArea.value,
-		"userId":3,//Ti.App.CurrentUser.userId,
+		"narrative":commentArea.value,
+		"userId":Ti.App.CurrentUser.userId,
 		"venue":"null"
 	}}); 
 });
