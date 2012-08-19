@@ -66,7 +66,7 @@ var statView = Titanium.UI.createView({
 			top:0, right:0, bottom:0, left:0 }); 
 
 var title = Titanium.UI.createLabel({
-	text:"  "+bookObject.title,
+	text:"  "+bookObject.title+"  "+bookObject.bookId,
 	top:0,
 	height:30,
 	left:0,

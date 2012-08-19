@@ -85,7 +85,7 @@ searchBar.addEventListener('return', function(e) {
 	
 	Titanium.API.info("You clicked the button");
 	var jsonTextToDisplay = '';
-	var url = 'http://'+host+':8080/Bookbook/api/book/external?title=' + searchBar.value + '&page=0';
+	var url = 'http://'+host+':8080/Bookbook/api/book?title=' + searchBar.value + '&page=0';
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.onload = function() {
 		Titanium.API.info(' Text: ' + this.responseText);
@@ -238,7 +238,7 @@ searchBar.addEventListener('return', function(e) {
 				{
 					jsonBookObject = jsonObject[this.parent.id];
 				}  //child clicked
-				
+							
 				else
 				{
 					jsonBookObject = jsonObject[this.id];
@@ -246,18 +246,26 @@ searchBar.addEventListener('return', function(e) {
 				
 				book_detail.bookObject = jsonBookObject;
 				
-				tab = Ti.UI.createTab({
-					    title:"Doesn't matter",
-					    window: book_detail
-					});
-					
+				
 				//Add book to the database
+				var jsonObjectNewBook;
 				var url = Ti.App.SERVICE_BASE_URL + 'book';
 				var xhr = Titanium.Network.createHTTPClient();
 				xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
 				xhr.onerror = function(e) {
 					Ti.API.info(e);
-					showValidationErrorDialog("Unable to add this book.  BookUp Web Services are currently unavailable.  Please try again soon.");
+					var resp = this.responseText;  
+				    Ti.API.info(resp);
+				    
+				    tab = Ti.UI.createTab({
+					    title:"Doesn't matter",
+					    window: book_detail
+					});
+					
+					tabGroup.addTab(tab);	
+					tabGroup.open();
+	
+					book_detail.open(); 
 				}
 				xhr.onload = function() {
 				    var resp = this.responseText;  
@@ -268,8 +276,20 @@ searchBar.addEventListener('return', function(e) {
 				    	showValidationErrorDialog(responseObject.error);
 				    }
 				    else { // successful
-				    		g_doneDialog.show();
-				    		return;
+				    	jsonObjectNewBook = JSON.parse(resp);
+				    	book_detail.bookObject = jsonObjectNewBook;
+				    	
+				    	tab = Ti.UI.createTab({
+					    title:"Doesn't matter",
+					    window: book_detail
+					});
+					
+					tabGroup.addTab(tab);	
+					tabGroup.open();
+	
+					book_detail.open(); 
+				    	g_doneDialog.show();
+				    	return;
 				    }
 				};
 			
@@ -286,13 +306,10 @@ searchBar.addEventListener('return', function(e) {
 					"source":"googlebooks",
 					"pubType":"book"
 				}}); 
-				
-				tabGroup.addTab(tab);	
-				tabGroup.open();
 
-				book_detail.open(); 
-				
+					
 			});
+				
 			// bookRowView.add(isbnLabel);
 			// bookRowView.add(descriptionLabel); 
 			// bookRowView.add(viewLabel);
