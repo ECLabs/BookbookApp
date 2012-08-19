@@ -134,7 +134,37 @@ picker.addEventListener('change',function(e) {
 });
 
 twitterButton.addEventListener('click', function(e){
-	
+	var url = Ti.App.SERVICE_BASE_URL + 'book/'+bookObject.bookId+'/checkIn';
+	var xhr = Titanium.Network.createHTTPClient();
+	xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
+	xhr.onerror = function(e) {
+		Ti.API.info(e);
+	}
+	xhr.onload = function() {
+	    var resp = this.responseText;  
+	    Ti.API.info(resp);
+	    
+	    var responseObject = eval('('+resp+')');
+	    if(responseObject.error) { // backend error message
+	    	showValidationErrorDialog(responseObject.error);
+	    }
+	    else { // successful
+	    		g_doneDialog.show();
+	    		return;
+	    }
+	};
+
+
+	Ti.API.debug(url);
+	xhr.open('POST', url);
+	xhr.send({'jsondata':{
+		"chapterOrSection":5,//pickerValue,
+		"latitude":"null",
+		"longitude":"null",
+		"narritive":"I love this book",//commentArea.value,
+		"userId":3,//Ti.App.CurrentUser.userId,
+		"venue":"null"
+	}}); 
 });
 
 fbButton.addEventListener('click', function(e){
