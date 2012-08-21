@@ -253,10 +253,8 @@ searchBar.addEventListener('return', function(e) {
 				var xhr = Titanium.Network.createHTTPClient();
 				xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
 				xhr.onerror = function(e) {
-					Ti.API.info(e);
-					var resp = this.responseText;  
-				    Ti.API.info(resp);
-				    
+					Ti.API.info("Book has already been added");
+					
 				    tab = Ti.UI.createTab({
 					    title:"Doesn't matter",
 					    window: book_detail

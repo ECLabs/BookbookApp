@@ -15,6 +15,10 @@ var REQUEST_TIMEOUT = Ti.App.REQUEST_TIMEOUT;
 		   
 var statsTable = Titanium.UI.createTableView();
 
+var oneSelected = false;
+var twoSelected = false;
+var threeSelected = false;
+
 scrollArea3.add(statsTable);
 
 var rowData = []
@@ -117,20 +121,112 @@ var bioLabel = Titanium.UI.createLabel({
 
 // create table view data object
 var data = [
-	{title:'Currently Reading', hasChild:true, height:35, selectedColor:'#fff'},
+	{title:'Have Read', hasChild:true, height:35, selectedColor:'#fff'},
+	{title:'Like', hasChild:true, height: 35, selectedColor:'#fff'},
 	{title:'Want to Read', hasChild:true, height: 35, selectedColor:'#fff'},
-	{title:'Recently Read', hasChild:true, height: 35, selectedColor:'#fff'},
 ];
 
 // create table view
 var tableview = Titanium.UI.createTableView({
 	data:data,
 	font:{fontSize:11},
+	style: Titanium.UI.iPhone.TableViewStyle.GROUPED,
+	backgroundColor:'transparent',
 	top:'2%',
-	width: '90%',
-	height: 105,
-	borderWidth:1,
-	borderColor: '#888'
+	width: '90%'
+});
+tableview.addEventListener('click', function(e) {
+	var selectIndex = e.index;
+	var i;
+	var newData = [];
+	var needData = true;
+	
+	if((e.rowData.title == 'Have Read') && (oneSelected == false))
+	{
+	    newData.push({title:'Have Read', hasChild:true, height:35, selectedColor:'#fff'});
+	    oneSelected = true;
+	    twoSelected = false;
+	    threeSelected = false;
+	}
+	else if((e.rowData.title == 'Like') && (twoSelected == false))
+	{
+	    newData.push({title:'Have Read', hasChild:true, height:35, selectedColor:'#fff'});
+	    newData.push({title:'Like', hasChild:true, height:35, selectedColor:'#fff'});
+	    oneSelected = false;
+	    twoSelected = true;
+	    threeSelected = false;
+	}
+	else if((e.rowData.title == 'Want to Read') && (threeSelected == false))
+	{
+		newData.push({title:'Have Read', hasChild:true, height:35, selectedColor:'#fff'});
+	    newData.push({title:'Like', hasChild:true, height:35, selectedColor:'#fff'});
+	    newData.push({title:'Want to Read', hasChild:true, height:35, selectedColor:'#fff'});
+	    oneSelected = false;
+	    twoSelected = false;
+	    threeSelected = true;
+	}
+	else
+	{
+	    needData = false;
+	}
+	
+	if(needData)
+	{
+		var url = Ti.App.SERVICE_BASE_URL + 'list/userId-'+Ti.App.CurrentUser.userId;
+		var xhr = Titanium.Network.createHTTPClient();
+		xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
+		xhr.onerror = function(e) {
+			Ti.API.info(e);
+		}
+		xhr.onload = function() {
+		    var resp = JSON.parse(this.responseText);  
+		    var length = Object.keys(resp).length;
+		    Ti.API.info(resp);
+		   
+		    if(resp == '') { 
+		    	//No data do nothing
+		    }
+		    else { // successful
+		    	for(i=0; i<length; i++)
+		    	{
+		    		Ti.API.info("i = "+i+"  // "+resp[i].type);
+		    		if((resp[i].type == 'HAVE_READ') && (e.rowData.title == 'Have Read'))
+		    		{
+		    			newData.push({title:"Book ID: "+resp[i].bookId, height:35, selectedColor:'#fff'});
+		    		}
+		    		else if((resp[i].type == 'LIKE') && (e.rowData.title == 'Like'))
+		    		{
+		    			newData.push({title:"Book ID: "+resp[i].bookId, height:35, selectedColor:'#fff'});
+		    		}
+		    		else if((resp[i].type == 'WANT_TO_READ') && (e.rowData.title == 'Want to Read'))
+		    		{
+		    			newData.push({title:"Book ID: "+resp[i].bookId, height:35, selectedColor:'#fff'});
+		    		}
+		    	}
+		    	
+		    	if((e.rowData.title == 'Have Read') && (oneSelected == true))
+				{
+				    newData.push({title:'Like', hasChild:true, height:35, selectedColor:'#fff'});
+					newData.push({title:'Want to Read', hasChild:true, height:35, selectedColor:'#fff'});
+				}
+				else if((e.rowData.title == 'Like') && (twoSelected == true))
+				{
+				    newData.push({title:'Want to Read', hasChild:true, height:35, selectedColor:'#fff'});
+				}
+
+				tableview.data = newData;
+		    	
+		    		g_doneDialog.show();
+		    		return;
+		    }
+		};
+	
+	
+		Ti.API.debug(url);
+		xhr.open('GET', url);
+		xhr.send();
+	}
+	
 });
 
 statView1.add(editProfileButton);
