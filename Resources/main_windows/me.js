@@ -254,7 +254,7 @@ statsTable.data = rowData;
 var fbButton = Ti.Facebook.createLoginButton({
     style : Ti.Facebook.BUTTON_STYLE_WIDE
 })
-statView1.add(fbButton);
+statView2.add(fbButton);
 
 // This is the non-facebook logout button... only appears if the user
 // did not login with FB
@@ -268,7 +268,7 @@ var logoutButton = Titanium.UI.createButton({
 	width: 120,
 	backgroundColor: '#feba86'
 });
-statView1.add(logoutButton);
+statView2.add(logoutButton);
 
 logoutButton.addEventListener('click', function(e) {
 	Ti.API.debug("logging out of Bookup");
