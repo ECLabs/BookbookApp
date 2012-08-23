@@ -192,15 +192,15 @@ tableview.addEventListener('click', function(e) {
 		    		Ti.API.info("i = "+i+"  // "+resp[i].type);
 		    		if((resp[i].type == 'HAVE_READ') && (e.rowData.title == 'Have Read'))
 		    		{
-		    			newData.push({title:"Book ID: "+resp[i].bookId, height:35, selectedColor:'#fff'});
+		    			newData.push({title:""+resp[i].book.title, height:35, selectedColor:'#fff'});
 		    		}
 		    		else if((resp[i].type == 'LIKE') && (e.rowData.title == 'Like'))
 		    		{
-		    			newData.push({title:"Book ID: "+resp[i].bookId, height:35, selectedColor:'#fff'});
+		    			newData.push({title:""+resp[i].book.title, height:35, selectedColor:'#fff'});
 		    		}
 		    		else if((resp[i].type == 'WANT_TO_READ') && (e.rowData.title == 'Want to Read'))
 		    		{
-		    			newData.push({title:"Book ID: "+resp[i].bookId, height:35, selectedColor:'#fff'});
+		    			newData.push({title:""+resp[i].book.title, height:35, selectedColor:'#fff'});
 		    		}
 		    	}
 		    	
@@ -301,7 +301,7 @@ function closeThisWindow() {
 	Ti.App.fireEvent('closeMainTabGroup');
 }
 
-profileName.text = Ti.App.CurrentUser.fullName;
+profileName.text = Ti.App.CurrentUser.name;
 bioLabel.text = Ti.App.CurrentUser.aboutMe;
 locationLabel.text = Ti.App.CurrentUser.location;
 if(Ti.App.CurrentUser.photoUrl != ''){profilePic.image = Ti.App.CurrentUser.photoUrl;}
