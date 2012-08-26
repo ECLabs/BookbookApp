@@ -127,6 +127,14 @@ var twitterButton = Ti.UI.createButton({
 	top: -118
 });
 
+var checkinButton = Ti.UI.createButton({  //temporary
+	title: 'Check In',
+	width:'50%',
+	height: 50,
+	right: '5%',
+	top: 100
+});
+
 var pickerValue;
 
 picker.addEventListener('change',function(e) {
@@ -134,6 +142,31 @@ picker.addEventListener('change',function(e) {
 });
 
 twitterButton.addEventListener('click', function(e){
+	
+	Ti.include("../lib/twitter_api.js");
+	//initialization
+	var twitterApi = new TwitterApi({
+    	consumerKey:'NyLJyeWADP5Idtw3raRA',
+    	consumerSecret:'qTwXxsfiQhp2m8L2BLwGOieRMwrC073mZ3664Tw'
+	});
+	
+	twitterApi.init(); 
+	
+	//status update
+	twitterApi.statuses_update({
+	    onSuccess: function(responce){
+	        alert('Your tweet has been posted!');
+	        Ti.API.info(responce);
+	    },
+	    onError: function(error){
+	    	alert('Sorry connection to twitter is currently unavailable. Please try again later.')
+	        Ti.API.error(error);
+	    },
+	    parameters:{status: 'Comment on "'+bookObject.title+'" via BookUp: '+commentArea.value}
+	});
+});
+	
+checkinButton.addEventListener('click', function(e){
 	var url = Ti.App.SERVICE_BASE_URL + 'book/'+bookObject.bookId+'/checkIn';
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
@@ -220,4 +253,5 @@ statView.add(pickerLabel);
 statView.add(picker);
 statView.add(fbButton);
 statView.add(twitterButton);
+statView.add(checkinButton);
 win.add(statView);
