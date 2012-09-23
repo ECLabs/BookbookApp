@@ -230,9 +230,9 @@ locationText.addEventListener('return', function()
 
 // create table view data object
 var dataManage = [
-	{title:'Currently Reading', hasChild:true, height:35, selectedColor:'#fff'},
+	{title:'Have Read', hasChild:true, height:35, selectedColor:'#fff'},
+	{title:'Like', hasChild:true, height: 35, selectedColor:'#fff'},
 	{title:'Want to Read', hasChild:true, height: 35, selectedColor:'#fff'},
-	{title:'Recently Read', hasChild:true, height: 35, selectedColor:'#fff'},
 ];
 
 // create table view
