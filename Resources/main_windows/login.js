@@ -306,7 +306,7 @@ function doFbLogin(fbdata) {
 
 	fbProfilePictureImageView.image = "http://graph.facebook.com/"+fbdata.username+"/picture";
 
-	Ti.API.info(url);
+	Ti.API.info("calling url:" + url);
 	xhr.open('POST', url);
 	xhr.send({'jsondata':{
 		//"id":0,
