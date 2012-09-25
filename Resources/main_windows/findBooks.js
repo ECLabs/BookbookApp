@@ -135,6 +135,7 @@ searchBar.addEventListener('return', function(e) {
 	    	var author = v.author
 	    	var description = v.description
 	    	var isbn = v.isbn10
+	    	var bookId = v.bookId
 	    	count++
 	    	
 	    	Ti.API.debug(smallThumbnail);
@@ -311,7 +312,15 @@ searchBar.addEventListener('return', function(e) {
 			// bookRowView.add(viewLabel);
 			
 			Ti.API.debug('building for  #' + i)
-			var row = Titanium.UI.createTableViewRow({height:'auto', className:isbn, hasChild:true});
+			var row;
+			if(bookId != null)
+			{
+				row = Titanium.UI.createTableViewRow({height:'auto', className:isbn, hasCheck:true});
+			}
+			else
+			{
+				row = Titanium.UI.createTableViewRow({height:'auto', className:isbn});
+			}
 			row.add(bookRowView);
 			rowData[i] = row;
 			
