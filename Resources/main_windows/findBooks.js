@@ -80,12 +80,10 @@ searchBar.addEventListener('return', function(e) {
 	
 	count = 0;
 	scrollArea.scrollTo(0,0)
-	
-	var host = 'labs.evanschambers.com'; // 'localhost';
-	
+
 	Titanium.API.info("You clicked the button");
 	var jsonTextToDisplay = '';
-	var url = 'http://'+host+':8080/Bookbook/api/book?title=' + searchBar.value + '&page=0';
+	var url = Ti.App.SERVICE_BASE_URL + 'book?title=' + searchBar.value + '&page=0';
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.onload = function() {
 		Titanium.API.info(' Text: ' + this.responseText);
