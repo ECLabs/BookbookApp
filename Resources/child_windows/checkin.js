@@ -171,7 +171,7 @@ checkinButton.addEventListener('click', function(e){
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
 	xhr.onerror = function(e) {
-		Ti.API.info(e);
+		Ti.API.info("An error has occurred: " + e);
 	}
 	xhr.onload = function() {
 	    var resp = this.responseText;  
@@ -182,7 +182,7 @@ checkinButton.addEventListener('click', function(e){
 	    	showValidationErrorDialog(responseObject.error);
 	    }
 	    else { // successful
-	    		g_doneDialog.show();
+	    		closeThisWindow();
 	    		return;
 	    }
 	};
