@@ -3,6 +3,8 @@ win.layout = 'vertical'
 
 var tab;
 
+var REQUEST_TIMEOUT = Ti.App.REQUEST_TIMEOUT;
+
 var tabGroup = Ti.UI.createTabGroup();
 
 var bookObject = Titanium.UI.currentWindow.bookObject;
@@ -43,21 +45,7 @@ checkinButton.addEventListener('click',function()
 				checkInWin.open(); 
 });
 
-backButton.addEventListener('click',function()
-{
-	Titanium.API.debug("You clicked the button back button");
-	closeThisWindow();
-});
-win.setLeftNavButton(backButton);
 win.setRightNavButton(checkinButton);
-
-function closeThisWindow() {
-	/*
-	 * This event is caught by findBooks.js and results in closing the tabGroup that contains
-	 * this window.
-	 */
-	Ti.App.fireEvent('closeBook_DetailTabGroup');
-}
 
 var statView = Titanium.UI.createView({ 
 			height:'auto', 
@@ -169,7 +157,7 @@ var moreButton = Titanium.UI.createButton({
 });
 
 var optionsDialogOpts = {
-	options:['Buy this book', 'Add to book list', 'Tweet', 'Cancel'],
+	options:['Have Read', 'Like', 'Want to Read', 'Cancel'],
 	//destructive:2,
 	cancel:3,
 	title:'More Actions'
@@ -180,15 +168,84 @@ var dialog = Titanium.UI.createOptionDialog(optionsDialogOpts);
 // add event listener
 dialog.addEventListener('click',function(e)
 {
-	//label.text = 'You selected ' + e.index;
-	
-	//if (isAndroid) {
-		//if (e.button) {
-		//	label.text += ' button';
-		//}  else {
-		//	label.text += ' option';
-		//}
-	//}
+	if(e.index == 0)
+	{
+		var url = Ti.App.SERVICE_BASE_URL + 'list/userId-'+Ti.App.CurrentUser.userId;
+		var xhr = Titanium.Network.createHTTPClient();
+		xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
+
+		xhr.onerror = function() {
+			showMessageDialog("BookUp Web Services are currently unavailable.  Please try again soon.");
+			
+		}
+		xhr.onload = function() {
+		    var resp = this.responseText;  
+		    Ti.API.info(resp);
+		    
+			alert("''"+bookObject.title+"'' has been added to your ''Have Read'' list.");
+		    g_doneDialog.show();
+		}
+			
+		Ti.API.debug(url);
+		xhr.open('POST', url);
+		xhr.send({'jsondata':{
+			"bookId":bookObject.bookId,
+			"title":bookObject.title,
+			"listType":"HAVE_READ"
+		}}); 
+	}
+	else if(e.index == 1)
+	{
+		var url = Ti.App.SERVICE_BASE_URL + 'list/userId-'+Ti.App.CurrentUser.userId;
+		var xhr = Titanium.Network.createHTTPClient();
+		xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
+
+		xhr.onerror = function() {
+			showMessageDialog("BookUp Web Services are currently unavailable.  Please try again soon.");
+			
+		}
+		xhr.onload = function() {
+		    var resp = this.responseText;  
+		    Ti.API.info(resp);
+		    
+			alert("''"+bookObject.title+"'' has been added to your ''Like'' list.");
+		    g_doneDialog.show();
+		}
+			
+		Ti.API.debug(url);
+		xhr.open('POST', url);
+		xhr.send({'jsondata':{
+			"bookId":bookObject.bookId,
+			"title":bookObject.title,
+			"listType":"LIKE"
+		}}); 
+	}
+	else if(e.index == 2)
+	{
+		var url = Ti.App.SERVICE_BASE_URL + 'list/userId-'+Ti.App.CurrentUser.userId;
+		var xhr = Titanium.Network.createHTTPClient();
+		xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
+
+		xhr.onerror = function() {
+			showMessageDialog("BookUp Web Services are currently unavailable.  Please try again soon.");
+			
+		}
+		xhr.onload = function() {
+		    var resp = this.responseText;  
+		    Ti.API.info(resp);
+		    
+			alert("''"+bookObject.title+"'' has been added to your ''Want to Read'' list.");
+		    g_doneDialog.show();
+		}
+			
+		Ti.API.debug(url);
+		xhr.open('POST', url);
+		xhr.send({'jsondata':{
+			"bookId":bookObject.bookId,
+			"title":bookObject.title,
+			"listType":"WANT_TO_READ"
+		}}); 	
+	}
 });
 
 moreButton.addEventListener('click', function()

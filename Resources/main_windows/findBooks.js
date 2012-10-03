@@ -227,7 +227,7 @@ searchBar.addEventListener('return', function(e) {
 				    fullscreen:false,
 				    navBarHidden:false,
 				    tabBarHidden:true,
-				    backButtonTitle:'test'
+				    backButtonTitle:'Back'
 				});
 				
 				var jsonBookObject;
@@ -254,7 +254,9 @@ searchBar.addEventListener('return', function(e) {
 				xhr.onerror = function(e) {
 					Ti.API.info("Book has already been added");
 					
-				    tab = Ti.UI.createTab({
+					
+					Titanium.UI.currentTab.open(book_detail,{animated:true});
+				    /*tab = Ti.UI.createTab({
 					    title:"Doesn't matter",
 					    window: book_detail
 					});
@@ -262,7 +264,7 @@ searchBar.addEventListener('return', function(e) {
 					tabGroup.addTab(tab);	
 					tabGroup.open();
 	
-					book_detail.open(); 
+					book_detail.open(); */
 				}
 				xhr.onload = function() {
 				    var resp = this.responseText;  
@@ -336,7 +338,3 @@ searchBar.addEventListener('return', function(e) {
 	xhr.send(null);
 });
 
-Ti.App.addEventListener('closeBook_DetailTabGroup', function() {
-	tabGroup.removeTab(tab); //This deletes and creates a new tab for each selection
-	tabGroup.close();
-});

@@ -4,7 +4,7 @@ Ti.Facebook.appid = '235098559884877';
 Ti.Facebook.permissions = ['user_about_me','email','publish_stream','user_location'];
 var fbProfilePictureImageView = Titanium.UI.createImageView();
 
-// is the user already logged in to facebook?
+ //is the user already logged in to facebook?
 if(Ti.Facebook.loggedIn) {
 	Ti.API.info("user is already logged in to facebook.  Data:");
     Ti.Facebook.requestWithGraphPath('me', {}, 'GET', function(e) {
