@@ -169,38 +169,37 @@ tableview.addEventListener('click', function(e) {
 	    getData = false;
 	}
 	
-
-	var url = Ti.App.SERVICE_BASE_URL + 'list/userId-'+Ti.App.CurrentUser.userId;
-	var xhr = Titanium.Network.createHTTPClient();
-	xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
-	xhr.onerror = function(e) {
-		Ti.API.info(e);
-	}
-	xhr.onload = function() {
-	    var resp = JSON.parse(this.responseText);  
-	    var length = Object.keys(resp).length;
-	    Ti.API.info(resp);
-	   
-	    if(resp == '') { 
-	    	//No data do nothing
-	    }
-	    else { // successful
-	    	if(!getData)
-	    	{
+	if(!getData)
+	{
+		var url = Ti.App.SERVICE_BASE_URL + 'list/userId-'+Ti.App.CurrentUser.userId;
+		var xhr = Titanium.Network.createHTTPClient();
+		xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
+		xhr.onerror = function(e) {
+			Ti.API.info(e);
+		}
+		xhr.onload = function() {
+		    var resp = JSON.parse(this.responseText);  
+		    var length = Object.keys(resp).length;
+		    Ti.API.info(resp);
+		   
+		    if(resp == '') { 
+		    	//No data do nothing
+		    }
+		    else { // successful
 		    	for(i=0; i<length; i++)
 		    	{
 		    		Ti.API.info("i = "+i+"  // "+resp[i].type);
 		    		if((resp[i].type == 'HAVE_READ') && (e.rowData.title == 'Have Read'))
 		    		{
-		    			newData.push({title:""+resp[i].book.title, height:35, selectedColor:'#fff'});
+		    			newData.push({title:""+resp[i].book.title, id:resp[i].book, height:35, selectedColor:'#fff'});
 		    		}
 		    		else if((resp[i].type == 'LIKE') && (e.rowData.title == 'Like'))
 		    		{
-		    			newData.push({title:""+resp[i].book.title, height:35, selectedColor:'#fff'});
+		    			newData.push({title:""+resp[i].book.title, id:resp[i].book, height:35, selectedColor:'#fff'});
 		    		}
 		    		else if((resp[i].type == 'WANT_TO_READ') && (e.rowData.title == 'Want to Read'))
 		    		{
-		    			newData.push({title:""+resp[i].book.title, height:35, selectedColor:'#fff'});
+		    			newData.push({title:""+resp[i].book.title, id:resp[i].book, height:35, selectedColor:'#fff'});
 		    		}
 		    	}
 		    	
@@ -218,33 +217,32 @@ tableview.addEventListener('click', function(e) {
 		    		g_doneDialog.show();
 		    		getData = true;
 			   		return;
-			  }
-			  else
-			  {
-			  	Ti.API.info(resp[selectIndex].book);
-			  	var jsonObjectNewBook = resp[selectIndex].book;
+		  	}
+		};
+	
+	
+		Ti.API.debug(url);
+		xhr.open('GET', url);
+		xhr.send();
+	}
+	else
+	{
+	  	var jsonObjectNewBook = e.rowData.id;
 
-			  	var book_detail = Titanium.UI.createWindow({
-					url:'../child_windows/book_detail.js',  
-				    title:'',
-				    barColor: '#777',
-				    fullscreen:false,
-				    navBarHidden:false,
-				    tabBarHidden:true,
-				    backButtonTitle:'Back'
-				});
+	  	var book_detail = Titanium.UI.createWindow({
+			url:'../child_windows/book_detail.js',  
+		    title:'',
+		    barColor: '#777',
+		    fullscreen:false,
+		    navBarHidden:false,
+		    tabBarHidden:true,
+		    backButtonTitle:'Back'
+		});
 				
-				book_detail.bookObject = jsonObjectNewBook;
+		book_detail.bookObject = jsonObjectNewBook;
 
-				Titanium.UI.currentTab.open(book_detail,{animated:true});
-			  }
-		  }
-	};
-	
-	
-	Ti.API.debug(url);
-	xhr.open('GET', url);
-	xhr.send();
+		Titanium.UI.currentTab.open(book_detail,{animated:true});
+	}
 	
 });
 

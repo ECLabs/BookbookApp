@@ -256,15 +256,6 @@ searchBar.addEventListener('return', function(e) {
 					
 					
 					Titanium.UI.currentTab.open(book_detail,{animated:true});
-				    /*tab = Ti.UI.createTab({
-					    title:"Doesn't matter",
-					    window: book_detail
-					});
-					
-					tabGroup.addTab(tab);	
-					tabGroup.open();
-	
-					book_detail.open(); */
 				}
 				xhr.onload = function() {
 				    var resp = this.responseText;  
@@ -278,17 +269,7 @@ searchBar.addEventListener('return', function(e) {
 				    	jsonObjectNewBook = JSON.parse(resp);
 				    	book_detail.bookObject = jsonObjectNewBook;
 				    	
-				    	tab = Ti.UI.createTab({
-					    title:"Doesn't matter",
-					    window: book_detail
-					});
-					
-					tabGroup.addTab(tab);	
-					tabGroup.open();
-	
-					book_detail.open(); 
-				    	g_doneDialog.show();
-				    	return;
+				    	Titanium.UI.currentTab.open(book_detail,{animated:true});
 				    }
 				};
 			
@@ -308,10 +289,6 @@ searchBar.addEventListener('return', function(e) {
 
 					
 			});
-				
-			// bookRowView.add(isbnLabel);
-			// bookRowView.add(descriptionLabel); 
-			// bookRowView.add(viewLabel);
 			
 			Ti.API.debug('building for  #' + i)
 			var row;
