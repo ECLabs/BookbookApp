@@ -139,7 +139,7 @@ tableview.addEventListener('click', function(e) {
 	var selectIndex = e.index;
 	var i;
 	var newData = [];
-	var needData = true;
+	var getData = true;
 	
 	if((e.rowData.title == 'Have Read') && (oneSelected == false))
 	{
@@ -147,6 +147,7 @@ tableview.addEventListener('click', function(e) {
 	    oneSelected = true;
 	    twoSelected = false;
 	    threeSelected = false;
+	    getData = false;
 	}
 	else if((e.rowData.title == 'Like') && (twoSelected == false))
 	{
@@ -155,6 +156,7 @@ tableview.addEventListener('click', function(e) {
 	    oneSelected = false;
 	    twoSelected = true;
 	    threeSelected = false;
+	    getData = false;
 	}
 	else if((e.rowData.title == 'Want to Read') && (threeSelected == false))
 	{
@@ -164,13 +166,10 @@ tableview.addEventListener('click', function(e) {
 	    oneSelected = false;
 	    twoSelected = false;
 	    threeSelected = true;
-	}
-	else
-	{
-	    needData = false;
+	    getData = false;
 	}
 	
-	if(needData)
+	if(!getData)
 	{
 		var url = Ti.App.SERVICE_BASE_URL + 'list/userId-'+Ti.App.CurrentUser.userId;
 		var xhr = Titanium.Network.createHTTPClient();
@@ -192,15 +191,15 @@ tableview.addEventListener('click', function(e) {
 		    		Ti.API.info("i = "+i+"  // "+resp[i].type);
 		    		if((resp[i].type == 'HAVE_READ') && (e.rowData.title == 'Have Read'))
 		    		{
-		    			newData.push({title:""+resp[i].book.title, height:35, selectedColor:'#fff'});
+		    			newData.push({title:""+resp[i].book.title, id:resp[i].book, height:35, selectedColor:'#fff'});
 		    		}
 		    		else if((resp[i].type == 'LIKE') && (e.rowData.title == 'Like'))
 		    		{
-		    			newData.push({title:""+resp[i].book.title, height:35, selectedColor:'#fff'});
+		    			newData.push({title:""+resp[i].book.title, id:resp[i].book, height:35, selectedColor:'#fff'});
 		    		}
 		    		else if((resp[i].type == 'WANT_TO_READ') && (e.rowData.title == 'Want to Read'))
 		    		{
-		    			newData.push({title:""+resp[i].book.title, height:35, selectedColor:'#fff'});
+		    			newData.push({title:""+resp[i].book.title, id:resp[i].book, height:35, selectedColor:'#fff'});
 		    		}
 		    	}
 		    	
@@ -213,18 +212,36 @@ tableview.addEventListener('click', function(e) {
 				{
 				    newData.push({title:'Want to Read', hasChild:true, height:35, selectedColor:'#fff'});
 				}
-
-				tableview.data = newData;
+					tableview.data = newData;
 		    	
 		    		g_doneDialog.show();
-		    		return;
-		    }
+		    		getData = true;
+			   		return;
+		  	}
 		};
 	
 	
 		Ti.API.debug(url);
 		xhr.open('GET', url);
 		xhr.send();
+	}
+	else
+	{
+	  	var jsonObjectNewBook = e.rowData.id;
+
+	  	var book_detail = Titanium.UI.createWindow({
+			url:'../child_windows/book_detail.js',  
+		    title:'',
+		    barColor: '#777',
+		    fullscreen:false,
+		    navBarHidden:false,
+		    tabBarHidden:true,
+		    backButtonTitle:'Back'
+		});
+				
+		book_detail.bookObject = jsonObjectNewBook;
+
+		Titanium.UI.currentTab.open(book_detail,{animated:true});
 	}
 	
 });
