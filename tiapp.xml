@@ -13,7 +13,7 @@
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <sdk-version>2.0.1.GA2</sdk-version>
+    <sdk-version>2.1.2.GA</sdk-version>
     <id>com.evanschambers.bookbook</id>
     <name>BookUp</name>
     <version>1.0</version>
@@ -52,6 +52,6 @@
         <theme>default</theme>
     </mobileweb>
     <modules>
-        <module platform="commonjs" version="2.0.1">ti.cloud</module>
+        <module platform="commonjs" version="2.3.0">ti.cloud</module>
     </modules>
 </ti:app>
