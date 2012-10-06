@@ -1,8 +1,7 @@
 var win = Ti.UI.currentWindow;  
 
 //Create the scroll area, all our content goes in here  
-var scrollArea3 = Titanium.UI.createScrollView({  
-    top: 55,  
+var scrollArea3 = Titanium.UI.createScrollView({   
     width: Ti.Platform.displayCaps.platformWidth,  
     height: (Ti.Platform.displayCaps.platformHeight - 111),  
     contentHeight: 'auto',
