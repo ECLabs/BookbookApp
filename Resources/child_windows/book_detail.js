@@ -73,17 +73,17 @@ var image = Titanium.UI.createImageView({
 var bookInfo = Titanium.UI.createLabel({
 	text:"By: "+bookObject.author+"\n"+bookObject.description,
 	left: 10,
-	top: -55,
+	top: -62,
 	width: '72%',
 	height: 70,
-	font:{fontSize:14}
+	font:{fontSize:12}
 });
 
 var readingButton = Titanium.UI.createButton({
 	title:"Reading",
 	height: 15,
 	left: 10,
-	top:10,
+	top:1,
 	font:{fontSize:10}
 });
 
@@ -103,10 +103,89 @@ var readingItButton = Titanium.UI.createButton({
 	font:{fontSize:10}
 });
 
+var yourLists = Titanium.UI.createLabel({
+	text:"  Your Lists",
+	top:2,
+	height:18,
+	left:0,
+	width:'100%',
+	textAlign: 'left',
+	backgroundColor: '#777',
+	color: '#fff',
+	font:{fontSize:14, fontStyle:'bold'}
+});
+
+var iconView = Titanium.UI.createView({ 
+			height:65, 
+			layout:'horizontal',
+			backgroundColor: '#fff', 
+}); 
+
+var likedItImage = Titanium.UI.createImageView({
+	url: '../images/ilike_icon_grayscale.png',
+	height:50,
+	width:50,
+	left:20,
+	top: 1
+})
+
+var readItImage = Titanium.UI.createImageView({
+	url: '../images/stopimg_grayscale.png',
+	height:50,
+	width:50,
+	left:28,
+	top: 1
+})
+
+var skimmedItImage = Titanium.UI.createImageView({
+	url: '../images/runningimg_grayscale.png',
+	height:50,
+	width:50,
+	left:28,
+	top: 1
+})
+
+var wantItImage = Titanium.UI.createImageView({
+	url: '../images/star_gold_256_grayscale.png',
+	height:50,
+	width:50,
+	left:28,
+	top: -1
+})
+
+var likedItText = Titanium.UI.createLabel({
+	text:"Liked It",
+	textAlign: 'left',
+	left: 25,
+	font:{fontSize:12}
+});
+
+var readItText = Titanium.UI.createLabel({
+	text:"Read It",
+	textAlign: 'left',
+	left: 38,
+	font:{fontSize:12}
+});
+
+var skimmedItText = Titanium.UI.createLabel({
+	text:"Skimmed It",
+	textAlign: 'left',
+	left: 31,
+	font:{fontSize:12}
+});
+
+var wantItText = Titanium.UI.createLabel({
+	text:"Want It",
+	textAlign: 'left',
+	left: 25,
+	font:{fontSize:12}
+});
+
 var recentActivity = Titanium.UI.createLabel({
 	text:"  Recent Activity",
-	top:10,
-	height:30,
+	top:1,
+	height:18,
+	bottom:1,
 	left:0,
 	width:'100%',
 	textAlign: 'left',
@@ -117,9 +196,10 @@ var recentActivity = Titanium.UI.createLabel({
 
 var commentButton = Titanium.UI.createButton({
 	title: "Comment",
-	top: -28,
+	top: -19,
 	right: 80,
-	height: 25,
+	height: 17,
+	font:{fontSize:12},
 	color: '#777'
 });
 
@@ -150,9 +230,10 @@ commentButton.addEventListener('click',function()
 
 var moreButton = Titanium.UI.createButton({
 	title: "More",
-	top: -25,
+	top: -17,
 	right: 10,
-	height: 25,
+	height: 17,
+	font:{fontSize:12},
 	color: '#777'
 });
 
@@ -182,16 +263,20 @@ function getLists()
 			if(bookListInfo[i].type == "HAVE_READ")
 			{
 				haveRead = "Remove from Have Read";
+				readItImage.url = '../images/stopimg.jpg'
 			}
 			else if(bookListInfo[i].type == "LIKE")
 			{
 				like = "Remove from Like";
+				likedItImage.url = '../images/ilike_icon.png';
 			}
 			else if(bookListInfo[i].type == "WANT_TO_READ")
 			{
 				wantToRead = "Remove from Want to Read";
+				wantItImage.url = '../images/star_gold_256.png'
 			}
 		}
+		//showScreen();
 		g_doneDialog.show();
 	}
 						
@@ -235,6 +320,7 @@ moreButton.addEventListener('click', function()
 				    
 					alert("''"+bookObject.title+"'' has been added to your ''Have Read'' list.");
 					haveRead = "Remove from Have Read";
+					readItImage.url = '../images/stopimg.jpg'
 					getLists();
 				    g_doneDialog.show();
 				}
@@ -267,6 +353,7 @@ moreButton.addEventListener('click', function()
 						    
 						    alert("''"+bookObject.title+"'' has been removed from your ''Have Read'' list.");
 						    haveRead = "Add to Have Read";
+						    readItImage.url = '../images/stopimg_grayscale.png'
 						    getLists();
 						}
 					
@@ -296,6 +383,7 @@ moreButton.addEventListener('click', function()
 				    
 					alert("''"+bookObject.title+"'' has been added to your ''Like'' list.");
 					like = "Remove from Like";
+					likedItImage.url = '../images/ilike_icon.png';
 					getLists();
 				    g_doneDialog.show();
 				}
@@ -328,6 +416,7 @@ moreButton.addEventListener('click', function()
 						    
 						    alert("''"+bookObject.title+"'' has been removed from your ''Like'' list.");
 						    like = "Add to like";
+						    likedItImage.url = '../images/ilike_icon_grayscale.png'
 						    getLists();
 						}
 					
@@ -357,6 +446,7 @@ moreButton.addEventListener('click', function()
 				    
 					alert("''"+bookObject.title+"'' has been added to your ''Want to Read'' list.");
 					wantToRead = "Remove from Want to Read";
+					wantItImage.url = '../images/star_gold_256.png'
 					getLists();
 				    g_doneDialog.show();
 				}
@@ -389,6 +479,7 @@ moreButton.addEventListener('click', function()
 						    
 						    alert("''"+bookObject.title+"'' has been removed from your ''Want to Read'' list.");
 						    wantToRead = "Add to Want to Read";
+						    wantItImage.url = '../images/star_gold_256_grayscale.png'
 						    getLists();
 						}
 					
@@ -405,8 +496,8 @@ moreButton.addEventListener('click', function()
 
 var today = Titanium.UI.createLabel({
 	text:"  Today",
-	top:2,
-	height:26,
+	top:3,
+	height:18,
 	left:0,
 	width:'100%',
 	textAlign: 'left',
@@ -424,17 +515,31 @@ var borderBottom = Ti.UI.createView({
 
 today.add(borderBottom);
 
+iconView.add(likedItImage);
+iconView.add(readItImage);
+iconView.add(skimmedItImage);
+iconView.add(wantItImage);
+iconView.add(likedItText);
+iconView.add(readItText);
+iconView.add(skimmedItText);
+iconView.add(wantItText);
+
 statView.add(title);
 statView.add(image);
 statView.add(bookInfo);
 statView.add(readingButton);
 statView.add(commentsButton);
 statView.add(readingItButton);
+statView.add(yourLists);
+statView.add(iconView);
 statView.add(recentActivity);
 statView.add(commentButton);
 statView.add(moreButton);
 statView.add(today);
-win.add(statView);
+//function showScreen()
+//{
+	win.add(statView);
+//}
 
 Ti.App.addEventListener('closeCheckInTabGroup', function() {
 	tabGroup.removeTab(tab); //This deletes and creates a new tab for each selection
