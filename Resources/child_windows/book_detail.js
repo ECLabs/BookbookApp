@@ -238,9 +238,10 @@ var moreButton = Titanium.UI.createButton({
 });
 
 var bookListInfo;
-var haveRead = "Add to Have Read";
-var like = "Add to Like";
-var wantToRead = "Add to Want to Read";
+var haveRead = "Add to Finished it";
+var like = "Add to Likes";
+var wantToRead = "Add to Want it";
+var skimmed = "Add to Skimmed it";
 
 getLists();
 
@@ -262,21 +263,25 @@ function getLists()
 		{
 			if(bookListInfo[i].type == "HAVE_READ")
 			{
-				haveRead = "Remove from Have Read";
+				haveRead = "Remove from Finished it";
 				readItImage.url = '../images/stopimg.jpg'
 			}
 			else if(bookListInfo[i].type == "LIKE")
 			{
-				like = "Remove from Like";
+				like = "Remove from Likes";
 				likedItImage.url = '../images/ilike_icon.png';
 			}
 			else if(bookListInfo[i].type == "WANT_TO_READ")
 			{
-				wantToRead = "Remove from Want to Read";
+				wantToRead = "Remove from Want it";
 				wantItImage.url = '../images/star_gold_256.png'
 			}
+			else if(bookListInfo[i].type == "SKIMMED")
+			{
+				wantToRead = "Remove from Skimmed it";
+				wantItImage.url = '../images/runningimg.jpg'
+			}
 		}
-		//showScreen();
 		g_doneDialog.show();
 	}
 						
@@ -286,9 +291,9 @@ function getLists()
 }
 
 var optionsDialogOpts = {
-	options:[haveRead, like, wantToRead, 'Tweet', 'Cancel'],
+	options:[haveRead, like, wantToRead, skimmed, 'Tweet', 'Cancel'],
 	//destructive:2,
-	cancel:4,
+	cancel:5,
 	title:'More Actions'
 };
 
@@ -296,7 +301,7 @@ var dialog = Titanium.UI.createOptionDialog(optionsDialogOpts);
 
 moreButton.addEventListener('click', function()
 {
-	optionsDialogOpts.options = [haveRead, like, wantToRead, 'Tweet', 'Cancel'];
+	optionsDialogOpts.options = [haveRead, like, wantToRead, skimmed, 'Tweet', 'Cancel'];
 	dialog = Titanium.UI.createOptionDialog(optionsDialogOpts);
 	dialog.show();
 
@@ -305,7 +310,7 @@ moreButton.addEventListener('click', function()
 	{
 		if(e.index == 0)
 		{
-			if(haveRead == "Add to Have Read")
+			if(haveRead == "Add to Finished it")
 			{
 				var url = Ti.App.SERVICE_BASE_URL + 'list/userId-'+Ti.App.CurrentUser.userId;
 				var xhr = Titanium.Network.createHTTPClient();
@@ -319,7 +324,7 @@ moreButton.addEventListener('click', function()
 				    Ti.API.info(resp);
 				    
 					alert("''"+bookObject.title+"'' has been added to your ''Have Read'' list.");
-					haveRead = "Remove from Have Read";
+					haveRead = "Remove from Finished it";
 					readItImage.url = '../images/stopimg.jpg'
 					getLists();
 				    g_doneDialog.show();
@@ -352,7 +357,7 @@ moreButton.addEventListener('click', function()
 						    Ti.API.info(resp);
 						    
 						    alert("''"+bookObject.title+"'' has been removed from your ''Have Read'' list.");
-						    haveRead = "Add to Have Read";
+						    haveRead = "Add to Finished it";
 						    readItImage.url = '../images/stopimg_grayscale.png'
 						    getLists();
 						}
@@ -367,7 +372,7 @@ moreButton.addEventListener('click', function()
 		}
 		else if(e.index == 1)
 		{
-			if(like == "Add to Like")
+			if(like == "Add to Likes")
 			{
 				var url = Ti.App.SERVICE_BASE_URL + 'list/userId-'+Ti.App.CurrentUser.userId;
 				var xhr = Titanium.Network.createHTTPClient();
@@ -382,7 +387,7 @@ moreButton.addEventListener('click', function()
 				    Ti.API.info(resp);
 				    
 					alert("''"+bookObject.title+"'' has been added to your ''Like'' list.");
-					like = "Remove from Like";
+					like = "Remove from Likes";
 					likedItImage.url = '../images/ilike_icon.png';
 					getLists();
 				    g_doneDialog.show();
@@ -415,7 +420,7 @@ moreButton.addEventListener('click', function()
 						    Ti.API.info(resp);
 						    
 						    alert("''"+bookObject.title+"'' has been removed from your ''Like'' list.");
-						    like = "Add to like";
+						    like = "Add to Likes";
 						    likedItImage.url = '../images/ilike_icon_grayscale.png'
 						    getLists();
 						}
@@ -430,7 +435,7 @@ moreButton.addEventListener('click', function()
 		}
 		else if(e.index == 2)
 		{
-			if(wantToRead == "Add to Want to Read")
+			if(wantToRead == "Add to Want it")
 			{
 				var url = Ti.App.SERVICE_BASE_URL + 'list/userId-'+Ti.App.CurrentUser.userId;
 				var xhr = Titanium.Network.createHTTPClient();
@@ -445,7 +450,7 @@ moreButton.addEventListener('click', function()
 				    Ti.API.info(resp);
 				    
 					alert("''"+bookObject.title+"'' has been added to your ''Want to Read'' list.");
-					wantToRead = "Remove from Want to Read";
+					wantToRead = "Remove from Want it";
 					wantItImage.url = '../images/star_gold_256.png'
 					getLists();
 				    g_doneDialog.show();
@@ -478,8 +483,71 @@ moreButton.addEventListener('click', function()
 						    Ti.API.info(resp);
 						    
 						    alert("''"+bookObject.title+"'' has been removed from your ''Want to Read'' list.");
-						    wantToRead = "Add to Want to Read";
+						    wantToRead = "Add to Want it";
 						    wantItImage.url = '../images/star_gold_256_grayscale.png'
+						    getLists();
+						}
+					
+						Ti.API.debug(url);
+						xhr.open('GET', url);
+						xhr.send(); 
+
+					}
+				}
+			}
+		}
+		else if(e.index == 3)
+		{
+			if(skimmed == "Add to Skimmed it")
+			{
+				var url = Ti.App.SERVICE_BASE_URL + 'list/userId-'+Ti.App.CurrentUser.userId;
+				var xhr = Titanium.Network.createHTTPClient();
+				xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
+		
+				xhr.onerror = function() {
+					showMessageDialog("BookUp Web Services are currently unavailable.  Please try again soon.");
+				}
+				
+				xhr.onload = function() {
+				    var resp = this.responseText;  
+				    Ti.API.info(resp);
+				    
+					alert("''"+bookObject.title+"'' has been added to your ''Skimmed it'' list.");
+					skimmed = "Remove from Want to Read";
+					skimmedItImage.url = '../images/runningimg.jpg'
+					getLists();
+				    g_doneDialog.show();
+				}
+					
+				Ti.API.debug(url);
+				xhr.open('POST', url);
+				xhr.send({'jsondata':{
+					"bookId":bookObject.bookId,
+					"title":bookObject.title,
+					"listType":"SKIMMED"
+				}}); 	
+			}
+			else
+			{
+				for(i=0; i<bookListInfo.length; i++)
+				{
+					if(bookListInfo[i].type == "SKIMMED")
+					{
+						var url = Ti.App.SERVICE_BASE_URL + 'list/delete/bookListId-'+bookListInfo[i].bookListId;
+						var xhr = Titanium.Network.createHTTPClient();
+						xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
+		
+						xhr.onerror = function() {
+							alert("BookUp Web Services are currently unavailable.  Please try again soon.");
+							Ti.API.info(url);
+						}
+						xhr.onload = function() {
+						    var resp = this.responseText;  
+						    Ti.API.info(resp);
+						    
+						    alert("''"+bookObject.title+"'' has been removed from your ''Skimmed it'' list.");
+						    wantToRead = "Add to Skimmed it";
+						    wantItImage.url = '../images/runningimg_grayscale.png'
 						    getLists();
 						}
 					
@@ -536,10 +604,8 @@ statView.add(recentActivity);
 statView.add(commentButton);
 statView.add(moreButton);
 statView.add(today);
-//function showScreen()
-//{
-	win.add(statView);
-//}
+win.add(statView);
+
 
 Ti.App.addEventListener('closeCheckInTabGroup', function() {
 	tabGroup.removeTab(tab); //This deletes and creates a new tab for each selection
