@@ -266,12 +266,18 @@ searchBar.addEventListener('return', function(e) {
 				    	showValidationErrorDialog(responseObject.error);
 				    }
 				    else { // successful
+				    	
 				    	jsonObjectNewBook = JSON.parse(resp);
 				    	book_detail.bookObject = jsonObjectNewBook;
 				    	
 				    	Titanium.UI.currentTab.open(book_detail,{animated:true});
 				    }
 				};
+				
+				// Add a check to the row on the list screen in case the user navigates back.
+				// TODO: this should probably not be set really until we get a success back from the
+				// web service that the book was successfully added.
+				e.row.hasCheck = true;
 			
 			
 				Ti.API.debug(url);
