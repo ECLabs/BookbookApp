@@ -276,10 +276,10 @@ function getLists()
 				wantToRead = "Remove from Want it";
 				wantItImage.url = '../images/star_gold_256.png'
 			}
-			else if(bookListInfo[i].type == "SKIMMED")
+			else if(bookListInfo[i].type == "HAVE_SKIMMED")
 			{
-				wantToRead = "Remove from Skimmed it";
-				wantItImage.url = '../images/runningimg.jpg'
+				skimmed = "Remove from Skimmed it";
+				skimmedItImage.url = '../images/runningimg.jpg'
 			}
 		}
 		g_doneDialog.show();
@@ -513,7 +513,7 @@ moreButton.addEventListener('click', function()
 				    Ti.API.info(resp);
 				    
 					alert("''"+bookObject.title+"'' has been added to your ''Skimmed it'' list.");
-					skimmed = "Remove from Want to Read";
+					skimmed = "Remove from Skimmed it";
 					skimmedItImage.url = '../images/runningimg.jpg'
 					getLists();
 				    g_doneDialog.show();
@@ -524,14 +524,14 @@ moreButton.addEventListener('click', function()
 				xhr.send({'jsondata':{
 					"bookId":bookObject.bookId,
 					"title":bookObject.title,
-					"listType":"SKIMMED"
+					"listType":"HAVE_SKIMMED"
 				}}); 	
 			}
 			else
 			{
 				for(i=0; i<bookListInfo.length; i++)
 				{
-					if(bookListInfo[i].type == "SKIMMED")
+					if(bookListInfo[i].type == "HAVE_SKIMMED")
 					{
 						var url = Ti.App.SERVICE_BASE_URL + 'list/delete/bookListId-'+bookListInfo[i].bookListId;
 						var xhr = Titanium.Network.createHTTPClient();
@@ -546,8 +546,8 @@ moreButton.addEventListener('click', function()
 						    Ti.API.info(resp);
 						    
 						    alert("''"+bookObject.title+"'' has been removed from your ''Skimmed it'' list.");
-						    wantToRead = "Add to Skimmed it";
-						    wantItImage.url = '../images/runningimg_grayscale.png'
+						    skimmed = "Add to Skimmed it";
+						    skimmedItImage.url = '../images/runningimg_grayscale.png'
 						    getLists();
 						}
 					
