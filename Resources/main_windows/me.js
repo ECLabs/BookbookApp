@@ -1,70 +1,78 @@
 var win = Ti.UI.currentWindow;  
 
+var logoutButton = Titanium.UI.createButton({
+    title:'Logout',
+    style:Titanium.UI.iPhone.SystemButtonStyle.PLAIN,
+    backgroundColor: '#eeee00',
+});
+
+logoutButton.addEventListener('click', function(e) {
+	Ti.API.debug("logging out of Bookup");
+	if(Ti.Facebook.loggedIn) {
+		closeThisWindow();
+		Ti.Facebook.logout();
+	} else {
+    	closeThisWindow();
+   }
+});
+
+win.setRightNavButton(logoutButton);
+win.title = Ti.App.CurrentUser.userName;
+
 //Create the scroll area, all our content goes in here  
 var scrollArea3 = Titanium.UI.createScrollView({   
-    width: Ti.Platform.displayCaps.platformWidth,  
-    height: (Ti.Platform.displayCaps.platformHeight - 111),  
+    width: Ti.Platform.displayCaps.platformWidth + 10,  
+    height: (Ti.Platform.displayCaps.platformHeight - 108),  
     contentHeight: 'auto',
-    showVerticalScrollIndicator: true,
-    backgroundColor: '#fff'
+    showVerticalScrollIndicator: false,
+    backgroundColor: '#fff',
+    left: -5
 }); 
 win.add(scrollArea3);
 
 var REQUEST_TIMEOUT = Ti.App.REQUEST_TIMEOUT;
-		   
-var statsTable = Titanium.UI.createTableView();
 
 var oneSelected = false;
 var twoSelected = false;
 var threeSelected = false;
-
-scrollArea3.add(statsTable);
-
-var rowData = []
-
-var friendCountLabel = Titanium.UI.createLabel({
-	text:'32 Friends',
-	height: 'auto',
-	width: 280,
-	color: 'blue',
-	font:{fontSize:12,fontFamily:'Helvetica Neue'}
-})
-var checkinCountLabel = Titanium.UI.createLabel({
-	text:'32 Checkins',
-	height: 'auto',
-	width: 280,
-	color: 'blue',
-	font:{fontSize:12,fontFamily:'Helvetica Neue'}
-})
-
 		
 var statView1 = Titanium.UI.createView({ 
 			height:'auto', 
 			layout:'vertical',
 			backgroundColor: '#fff', 
 			top:5, right:5, bottom:5, left:5 }); 
-
-var statView2 = Titanium.UI.createView({ 
-			height:'auto', 
-			layout:'vertical',
-			backgroundColor: '#aaa', 
-			top:5, right:5, bottom:5, left:5 });
-statView2.add(friendCountLabel) 
 			
-var statView3 = Titanium.UI.createView({ 
-			height:'auto', 
-			layout:'vertical',
-			backgroundColor: '#aaa', 
-			top:5, right:5, bottom:5, left:5 }); 
-statView3.add(checkinCountLabel)
+var profileLabel = Titanium.UI.createLabel({
+	text:"  PROFILE",
+	top:0,
+	height:22,
+	left:0,
+	width: '100%',
+	textAlign: 'left',
+	backgroundColor: '#ff9900',
+	color: '#fff',
+	font:{fontSize:16, fontStyle:'bold'}
+});
+
+var profileHorzView = Titanium.UI.createScrollView({
+	width: 'auto',  
+    height: 60,  
+    showVerticalScrollIndicator: false,
+    layout: 'horizontal',
+    backgroundColor: '#fff',
+    top: 0
+});
 
 var profilePic = Titanium.UI.createImageView({
 	image:'http://www.appcelerator.com/wp-content/uploads/2009/06/titanium_desk.png',
-	height:'30%',
-	width: '35%',
-	top:'-7%',
-	left:'5%',
+	height:'60',
+	width: '60',
+	top:0,
+	left:0,
 });
+
+
+
 
 var userData;
 var resp;
@@ -72,20 +80,18 @@ var resp;
 var profileName = Titanium.UI.createLabel({
 	id:'curReadLabel',
 	text:'',
-	top:'-20%',
-	height:'10%',
-	left:'45%',
-	font:{fontSize:18, fontStyle:'bold'},
-	width: '50%'
+	top: 0,
+	left: 6,
+	font:{fontSize:15, fontStyle:'bold'}
 });
 
 var editProfileButton = Titanium.UI.createButton({
-	title:'Edit',
-	height:25,
-	width:'21%',
-	top:0,
-	right:'5%',
-	borderWidth:4,
+	title:'->',
+	height:30,
+	width:'15%',
+	top:15,
+	left: 10,
+	borderRadius: 10,
 	color: '#000000'
 });
 
@@ -101,132 +107,333 @@ editProfileButton.addEventListener('click', function(e)
 
 var locationLabel = Titanium.UI.createLabel({
 	id:'locationLabel',
-	text:'Location',
-	top:'-5%',
-	height:'5%',
-	font:{fontSize:11},
-	left:'45%',
-	width: '45%'
+	text:'',
+	top:15,
+	left:6,
+	color: '#777',
+	font:{fontSize:14}
 });
 
 var bioLabel = Titanium.UI.createLabel({
 	id:'bioLabel',
 	text:'',
-	height:'5%',
-	font:{fontSize:11},
-	left:'5%',
-	width: '90%'
+	height:30,
+	top: 30,
+	left: 6,
+	font:{fontSize:10},
+	width: '100%'
 });
 
-// create table view data object
-var data = [
-	{title:'Have Read', hasChild:true, height:35, selectedColor:'#fff'},
-	{title:'Like', hasChild:true, height: 35, selectedColor:'#fff'},
-	{title:'Want to Read', hasChild:true, height: 35, selectedColor:'#fff'},
-];
-
-// create table view
-var tableview = Titanium.UI.createTableView({
-	data:data,
-	font:{fontSize:11},
-	style: Titanium.UI.iPhone.TableViewStyle.GROUPED,
-	backgroundColor:'transparent',
-	top:'2%',
-	width: '90%'
+var profileVertView = Titanium.UI.createView({
+	top: 0,
+	width: '60%',
+	layout: 'verticle'
 });
-tableview.addEventListener('click', function(e) {
-	var selectIndex = e.index;
+
+profileVertView.add(profileName);
+profileVertView.add(locationLabel);
+profileVertView.add(bioLabel);
+
+var likeHorzView = Titanium.UI.createScrollView({
+	width: 'auto',  
+    height: 160,  
+    showVerticalScrollIndicator: false,
+    layout: 'horizontal',
+    backgroundColor: '#fff',
+    top: 0
+});
+	
+var wantToReadHorzView = Titanium.UI.createScrollView({
+	width: 'auto',  
+    height: 160,  
+    showVerticalScrollIndicator: false,
+    layout: 'horizontal',
+    backgroundColor: '#fff',
+    top: 0
+});
+
+var skimmedHorzView = Titanium.UI.createScrollView({
+	width: 'auto',  
+    height: 160,  
+	showVerticalScrollIndicator: false,
+	layout: 'horizontal',
+	backgroundColor: '#fff',
+	top: 0
+});
+
+var haveReadHorzView = Titanium.UI.createScrollView({
+	width: 'auto',  
+    height: 160,  
+    showVerticalScrollIndicator: false,
+    layout: 'horizontal',
+    backgroundColor: '#fff',
+    top: 0
+});
+
+var numLike = 0;
+var numWantToRead = 0;
+var numHaveRead = 0;
+var numSkimmed = 0;
+
+loadData();
+
+function loadData() 
+{
 	var i;
-	var newData = [];
-	var getData = true;
-	
-	if((e.rowData.title == 'Have Read') && (oneSelected == false))
-	{
-	    newData.push({title:'Have Read', hasChild:true, height:35, selectedColor:'#fff'});
-	    oneSelected = true;
-	    twoSelected = false;
-	    threeSelected = false;
-	    getData = false;
+
+	var url = Ti.App.SERVICE_BASE_URL + 'list/userId-'+Ti.App.CurrentUser.userId;
+	var xhr = Titanium.Network.createHTTPClient();
+	xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
+	xhr.onerror = function(e) {
+		Ti.API.info(e);
 	}
-	else if((e.rowData.title == 'Like') && (twoSelected == false))
-	{
-	    newData.push({title:'Have Read', hasChild:true, height:35, selectedColor:'#fff'});
-	    newData.push({title:'Like', hasChild:true, height:35, selectedColor:'#fff'});
-	    oneSelected = false;
-	    twoSelected = true;
-	    threeSelected = false;
-	    getData = false;
-	}
-	else if((e.rowData.title == 'Want to Read') && (threeSelected == false))
-	{
-		newData.push({title:'Have Read', hasChild:true, height:35, selectedColor:'#fff'});
-	    newData.push({title:'Like', hasChild:true, height:35, selectedColor:'#fff'});
-	    newData.push({title:'Want to Read', hasChild:true, height:35, selectedColor:'#fff'});
-	    oneSelected = false;
-	    twoSelected = false;
-	    threeSelected = true;
-	    getData = false;
-	}
-	
-	if(!getData)
-	{
-		var url = Ti.App.SERVICE_BASE_URL + 'list/userId-'+Ti.App.CurrentUser.userId;
-		var xhr = Titanium.Network.createHTTPClient();
-		xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
-		xhr.onerror = function(e) {
-			Ti.API.info(e);
-		}
-		xhr.onload = function() {
-		    var resp = JSON.parse(this.responseText);  
-		    var length = Object.keys(resp).length;
-		    Ti.API.info(resp);
-		   
-		    if(resp == '') { 
-		    	//No data do nothing
-		    }
-		    else { // successful
-		    	for(i=0; i<length; i++)
+	xhr.onload = function() {
+	    var resp = JSON.parse(this.responseText);  
+	    var length = Object.keys(resp).length;
+	    Ti.API.info(resp);
+	   
+	    if(resp == '') { 
+	    	//No data do nothing
+	    }
+	    else { // successful
+	    	for(i=0; i<length; i++)
+	    	{
+	    		if(resp[i].type == 'HAVE_READ')
 		    	{
-		    		Ti.API.info("i = "+i+"  // "+resp[i].type);
-		    		if((resp[i].type == 'HAVE_READ') && (e.rowData.title == 'Have Read'))
-		    		{
-		    			newData.push({title:""+resp[i].book.title, id:resp[i].book, height:35, selectedColor:'#fff'});
-		    		}
-		    		else if((resp[i].type == 'LIKE') && (e.rowData.title == 'Like'))
-		    		{
-		    			newData.push({title:""+resp[i].book.title, id:resp[i].book, height:35, selectedColor:'#fff'});
-		    		}
-		    		else if((resp[i].type == 'WANT_TO_READ') && (e.rowData.title == 'Want to Read'))
-		    		{
-		    			newData.push({title:""+resp[i].book.title, id:resp[i].book, height:35, selectedColor:'#fff'});
-		    		}
-		    	}
-		    	
-		    	if((e.rowData.title == 'Have Read') && (oneSelected == true))
-				{
-				    newData.push({title:'Like', hasChild:true, height:35, selectedColor:'#fff'});
-					newData.push({title:'Want to Read', hasChild:true, height:35, selectedColor:'#fff'});
-				}
-				else if((e.rowData.title == 'Like') && (twoSelected == true))
-				{
-				    newData.push({title:'Want to Read', hasChild:true, height:35, selectedColor:'#fff'});
-				}
-					tableview.data = newData;
-		    	
-		    		g_doneDialog.show();
-		    		getData = true;
-			   		return;
-		  	}
-		};
+		    		var bookView = Ti.UI.createImageView({
+		   				image: resp[i].book.thumbnailUrl,
+		   				top:0,
+		   				height:130,
+		   				width:80,
+		   				left:20,
+		   				id:resp[i].book
+		   			});
+		   			
+		   			var titleView = Ti.UI.createLabel({
+		   				text:resp[i].book.title,
+		   				font:{fontSize:11},
+		   				bottom:12,
+		   				left:-80,
+		   				width:80,
+		   				height:12,
+		   				textAlign: 'center'
+		   			});
+		   			
+		   			var authorView = Ti.UI.createLabel({
+		   				text:resp[i].book.author,
+		   				font:{fontSize:11},
+		   				bottom:0,
+		   				left:-80,
+		   				width:80,
+		   				height:12,
+		   				textAlign: 'center'
+		   			});
+		   			
+		   			haveReadHorzView.add(bookView);
+		   			haveReadHorzView.add(titleView);
+		   			haveReadHorzView.add(authorView);
+		   			numHaveRead++;
+		   			
+		   			bookView.addEventListener('click', function(e)
+					{
+						var jsonObjectNewBook = this.id;
+
+					  	var book_detail = Titanium.UI.createWindow({
+							url:'../child_windows/book_detail.js',  
+						    title:'',
+						    barColor: '#777',
+						    fullscreen:false,
+						    navBarHidden:false,
+						    tabBarHidden:true,
+						    backButtonTitle:'Back'
+						});
+								
+						book_detail.bookObject = jsonObjectNewBook;
+				
+						Titanium.UI.currentTab.open(book_detail,{animated:true});	
+					});
+		   		}
+		   		else if(resp[i].type == 'LIKE')
+		   		{
+		   			var bookView = Ti.UI.createImageView({
+		   				image: resp[i].book.thumbnailUrl,
+		   				top:0,
+		   				height:130,
+		   				width:80,
+		   				left:20,
+		   				id:resp[i].book
+		   			});
+		   			
+		   			var titleView = Ti.UI.createLabel({
+		   				text:resp[i].book.title,
+		   				font:{fontSize:11},
+		   				bottom:12,
+		   				left:-80,
+		   				width:80,
+		   				height:12,
+		   				textAlign: 'center'
+		   			});
+		   			
+		   			var authorView = Ti.UI.createLabel({
+		   				text:resp[i].book.author,
+		   				font:{fontSize:11},
+		   				bottom:0,
+		   				left:-80,
+		   				width:80,
+		   				height:12,
+		   				textAlign: 'center'
+		   			});
+		   			
+		   			likeHorzView.add(bookView);
+		   			likeHorzView.add(titleView);
+		   			likeHorzView.add(authorView);
+		   			numLike++;
+		   			
+		   			bookView.addEventListener('click', function(e)
+					{
+						var jsonObjectNewBook = this.id;
+
+					  	var book_detail = Titanium.UI.createWindow({
+							url:'../child_windows/book_detail.js',  
+						    title:'',
+						    barColor: '#777',
+						    fullscreen:false,
+						    navBarHidden:false,
+						    tabBarHidden:true,
+						    backButtonTitle:'Back'
+						});
+								
+						book_detail.bookObject = jsonObjectNewBook;
+				
+						Titanium.UI.currentTab.open(book_detail,{animated:true});	
+					});
+		   		}
+		   		else if(resp[i].type == 'WANT_TO_READ') 
+		   		{
+		   			var bookView = Ti.UI.createImageView({
+		   				image: resp[i].book.thumbnailUrl,
+		   				top:0,
+		   				height:130,
+		   				width:80,
+		   				left:20,
+		   				id:resp[i].book
+		   			});
+		   			
+		   			var titleView = Ti.UI.createLabel({
+		   				text:resp[i].book.title,
+		   				font:{fontSize:11},
+		   				bottom:12,
+		   				left:-80,
+		   				width:80,
+		   				height:12,
+		   				textAlign: 'center'
+		   			});
+		   			
+		   			var authorView = Ti.UI.createLabel({
+		   				text:resp[i].book.author,
+		   				font:{fontSize:11},
+		   				bottom:0,
+		   				left:-80,
+		   				width:80,
+		   				height:12,
+		   				textAlign: 'center'
+		   			});
+		   			
+		   			wantToReadHorzView.add(bookView);
+		   			wantToReadHorzView.add(titleView);
+		   			wantToReadHorzView.add(authorView);
+		   			numWantToRead++;
+		   			
+		   			bookView.addEventListener('click', function(e)
+					{
+						var jsonObjectNewBook = this.id;
+
+					  	var book_detail = Titanium.UI.createWindow({
+							url:'../child_windows/book_detail.js',  
+						    title:'',
+						    barColor: '#777',
+						    fullscreen:false,
+						    navBarHidden:false,
+						    tabBarHidden:true,
+						    backButtonTitle:'Back'
+						});
+								
+						book_detail.bookObject = jsonObjectNewBook;
+				
+						Titanium.UI.currentTab.open(book_detail,{animated:true});	
+					});
+		   		}
+		   		else if(resp[i].type == 'SKIMMED') 
+		   		{
+		   			var bookView = Ti.UI.createImageView({
+		   				image: resp[i].book.thumbnailUrl,
+		   				top:0,
+		   				height:130,
+		   				width:80,
+		   				left:20,
+		   				id:resp[i].book
+		   			});
+		   			
+		   			var titleView = Ti.UI.createLabel({
+		   				text:resp[i].book.title,
+		   				font:{fontSize:11},
+		   				bottom:12,
+		   				left:-80,
+		   				width:80,
+		   				height:12,
+		   				textAlign: 'center'
+		   			});
+		   			
+		   			var authorView = Ti.UI.createLabel({
+		   				text:resp[i].book.author,
+		   				font:{fontSize:11},
+		   				bottom:0,
+		   				left:-80,
+		   				width:80,
+		   				height:12,
+		   				textAlign: 'center'
+		   			});
+		   			
+		   			skimmedHorzView.add(bookView);
+		   			skimmedHorzView.add(titleView);
+		   			skimmedHorzView.add(authorView);
+		   			numSkimmed++;
+		   			
+		   			bookView.addEventListener('click', function(e)
+					{
+						var jsonObjectNewBook = this.id;
+
+					  	var book_detail = Titanium.UI.createWindow({
+							url:'../child_windows/book_detail.js',  
+						    title:'',
+						    barColor: '#777',
+						    fullscreen:false,
+						    navBarHidden:false,
+						    tabBarHidden:true,
+						    backButtonTitle:'Back'
+						});
+								
+						book_detail.bookObject = jsonObjectNewBook;
+				
+						Titanium.UI.currentTab.open(book_detail,{animated:true});	
+					});
+		   		}
+		   	}
+			
+			addLabels();
+		   	g_doneDialog.show();
+		   	return;
+	 	}
+	};
 	
 	
-		Ti.API.debug(url);
-		xhr.open('GET', url);
-		xhr.send();
-	}
-	else
+	Ti.API.debug(url);
+	xhr.open('GET', url);
+	xhr.send();
+		
+	/*else
 	{
-	  	var jsonObjectNewBook = e.rowData.id;
+	  	var jsonObjectNewBook = this.id;
 
 	  	var book_detail = Titanium.UI.createWindow({
 			url:'../child_windows/book_detail.js',  
@@ -241,73 +448,86 @@ tableview.addEventListener('click', function(e) {
 		book_detail.bookObject = jsonObjectNewBook;
 
 		Titanium.UI.currentTab.open(book_detail,{animated:true});
-	}
+	}*/
 	
-});
-
-statView1.add(editProfileButton);
-statView1.add(profilePic);
-statView1.add(profileName);
-statView1.add(locationLabel);
-statView1.add(bioLabel);
-statView1.add(tableview);
-		
-var totalFriendsRow = Titanium.UI.createTableViewRow({height:'auto', backgroundColor:'#f00'});
-totalFriendsRow.add(statView1);
-rowData[0] = totalFriendsRow;
-
-var totalCheckinsRow = Titanium.UI.createTableViewRow({height:'auto', backgroundColor:'#f00'});
-totalCheckinsRow.add(statView2);
-rowData[1] = totalCheckinsRow;
-
-var totalCheckinsRow = Titanium.UI.createTableViewRow({height:'auto', backgroundColor:'#f00'});
-totalCheckinsRow.add(statView3);
-rowData[2] = totalCheckinsRow;
-
-statsTable.data = rowData;
-
-// FB login button, appears only if user logged in with FB.
-var fbButton = Ti.Facebook.createLoginButton({
-    style : Ti.Facebook.BUTTON_STYLE_WIDE
-})
-statView2.add(fbButton);
-
-// This is the non-facebook logout button... only appears if the user
-// did not login with FB
-var logoutButton = Titanium.UI.createButton({
-	title:'Logout',
-	color:'#000',
-	font:{fontSize:12,fontFamily:'Helvetica Neue', fontWeight:'bold'},
-	borderRadius: 5,
-	borderColor: '#000',
-	height: 35,
-	width: 120,
-	backgroundColor: '#feba86'
-});
-statView2.add(logoutButton);
-
-logoutButton.addEventListener('click', function(e) {
-	Ti.API.debug("logging out of Bookup");
-    closeThisWindow();
-});
+}
 
 
-Ti.Facebook.addEventListener('logout', function(e) {
-    Ti.API.debug("logging out of FB/Bookup");
-    closeThisWindow();
-});
+function addLabels()
+{
+	var likeLabel = Titanium.UI.createLabel({
+		text:"  BOOKS I LIKE ("+numLike+")",
+		top:0,
+		height:22,
+		left:0,
+		width: '100%',
+		textAlign: 'left',
+		backgroundColor: '#00CCFF',
+		color: '#fff',
+		font:{fontSize:16, fontStyle:'bold'}
+	});
+	
+	var wantToReadLabel = Titanium.UI.createLabel({
+		text:"  BOOKS I WANT TO READ ("+numWantToRead+")",
+		top:0,
+		height:22,
+		left:0,
+		width: '100%',
+		textAlign: 'left',
+		backgroundColor: '#00cc33',
+		color: '#fff',
+		font:{fontSize:16, fontStyle:'bold'}
+	});
+	
+	var skimmedLabel = Titanium.UI.createLabel({
+		text:"  BOOKS I HAVE SKIMMED ("+numSkimmed+")",
+		top:0,
+		height:22,
+		left:0,
+		width: '100%',
+		textAlign: 'left',
+		backgroundColor: '#e9e900',
+		color: '#fff',
+		font:{fontSize:16, fontStyle:'bold'}
+	});
+	
+	var haveReadLabel = Titanium.UI.createLabel({
+		text:"  BOOKS I HAVE READ ("+numHaveRead+")",
+		top:0,
+		height:22,
+		left:0,
+		width: '100%',
+		textAlign: 'left',
+		backgroundColor: '#cc0000',
+		color: '#fff',
+		font:{fontSize:16, fontStyle:'bold'}
+	});
+	
+profileHorzView.add(profilePic);
+profileHorzView.add(profileVertView);
+profileHorzView.add(editProfileButton);
 
-win.addEventListener('focus', function(e) {
-	if(Ti.Facebook.loggedIn) {
-		Ti.API.debug("showing FB logout");
-		fbButton.show();
-		logoutButton.hide();
-	} else {
-		Ti.API.debug("hiding FB logout");
-		fbButton.hide();
-		logoutButton.show();
-	}
-});
+statView1.add(profileLabel);
+statView1.add(profileHorzView);
+
+if(numLike==0){likeHorzView.height = 5;}
+else if(numWantToRead==0){wantToReadHorzView.height = 5;}
+else if(numHaveRead==0){haveReadHorzView.height = 5;}
+else if(numSkimmed==0){skimmedHorzView.height = 5;}
+
+statView1.add(likeLabel);
+statView1.add(likeHorzView);
+statView1.add(wantToReadLabel);
+statView1.add(wantToReadHorzView);
+statView1.add(skimmedLabel);
+statView1.add(skimmedHorzView);
+statView1.add(haveReadLabel);
+statView1.add(haveReadHorzView);
+
+scrollArea3.add(statView1);
+}
+
+
 
 function closeThisWindow() {
 	/*
@@ -317,7 +537,7 @@ function closeThisWindow() {
 	Ti.App.fireEvent('closeMainTabGroup');
 }
 
-profileName.text = Ti.App.CurrentUser.name;
+profileName.text = Ti.App.CurrentUser.fullName;
 bioLabel.text = Ti.App.CurrentUser.aboutMe;
 locationLabel.text = Ti.App.CurrentUser.location;
 if(Ti.App.CurrentUser.photoUrl != ''){profilePic.image = Ti.App.CurrentUser.photoUrl;}
