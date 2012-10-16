@@ -363,7 +363,7 @@ function loadData()
 						Titanium.UI.currentTab.open(book_detail,{animated:true});	
 					});
 		   		}
-		   		else if(resp[i].type == 'SKIMMED') 
+		   		else if(resp[i].type == 'HAVE_SKIMMED') 
 		   		{
 		   			var bookView = Ti.UI.createImageView({
 		   				image: resp[i].book.thumbnailUrl,
