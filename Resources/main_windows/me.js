@@ -1,5 +1,8 @@
 var win = Ti.UI.currentWindow;  
+Titanium.UI.currentWindow.addEventListener('focus', loadWindow);
 
+function loadWindow() //Encompasses everything
+{
 var logoutButton = Titanium.UI.createButton({
     title:'Logout',
     style:Titanium.UI.iPhone.SystemButtonStyle.PLAIN,
@@ -180,7 +183,11 @@ loadData();
 function loadData() 
 {
 	var i;
-
+	numLike = 0;
+	numWantToRead = 0;
+	numHaveRead = 0;
+	numSkimmed = 0;
+	
 	var url = Ti.App.SERVICE_BASE_URL + 'list/userId-'+Ti.App.CurrentUser.userId;
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
@@ -420,7 +427,7 @@ function loadData()
 		   		}
 		   	}
 			
-			addLabels();
+			updateView();
 		   	g_doneDialog.show();
 		   	return;
 	 	}
@@ -430,30 +437,10 @@ function loadData()
 	Ti.API.debug(url);
 	xhr.open('GET', url);
 	xhr.send();
-		
-	/*else
-	{
-	  	var jsonObjectNewBook = this.id;
-
-	  	var book_detail = Titanium.UI.createWindow({
-			url:'../child_windows/book_detail.js',  
-		    title:'',
-		    barColor: '#777',
-		    fullscreen:false,
-		    navBarHidden:false,
-		    tabBarHidden:true,
-		    backButtonTitle:'Back'
-		});
-				
-		book_detail.bookObject = jsonObjectNewBook;
-
-		Titanium.UI.currentTab.open(book_detail,{animated:true});
-	}*/
-	
 }
 
 
-function addLabels()
+function updateView()
 {
 	var likeLabel = Titanium.UI.createLabel({
 		text:"  BOOKS I LIKE ("+numLike+")",
@@ -550,3 +537,4 @@ Ti.App.addEventListener('saveProfileEvent', function() {
 	locationLabel.text = currUser.location;
 	profilePic.image = currUser.photoUrl;
 });
+}
