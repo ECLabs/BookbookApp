@@ -76,6 +76,11 @@ done.addEventListener('click', function()
  */
 //win.setRightNavButton(done);
 
+function refreshSearch()
+{
+	searchBar.fireEvent('return');
+}
+
 searchBar.addEventListener('return', function(e) {
 	
 	count = 0;
@@ -269,6 +274,7 @@ searchBar.addEventListener('return', function(e) {
 				    	
 				    	jsonObjectNewBook = JSON.parse(resp);
 				    	book_detail.bookObject = jsonObjectNewBook;
+				    	refreshSearch();
 				    	
 				    	Titanium.UI.currentTab.open(book_detail,{animated:true});
 				    }
