@@ -9,6 +9,20 @@ var tabGroup = Ti.UI.createTabGroup();
 
 var bookObject = Titanium.UI.currentWindow.bookObject;
 
+var g_messageDialog = Ti.UI.createAlertDialog({
+	buttonNames: ['Continue'],
+	cancel:0,
+	title: 'Error',
+	message: 'There\'s an error.'
+});
+
+function showMessageDialog(message) {
+	g_messageDialog.setMessage(message);
+	g_messageDialog.show();
+	
+}
+
+
 var backButton = Titanium.UI.createButton({
     title:'Back',
     style:Titanium.UI.iPhone.SystemButtonStyle.PLAIN
@@ -282,7 +296,7 @@ function getLists()
 				skimmedItImage.url = '../images/runningimg.jpg'
 			}
 		}
-		g_doneDialog.show();
+		
 	}
 						
 	Ti.API.debug(url);
@@ -327,7 +341,7 @@ moreButton.addEventListener('click', function()
 					haveRead = "Remove from Finished it";
 					readItImage.url = '../images/stopimg.jpg'
 					getLists();
-				    g_doneDialog.show();
+				    
 				}
 					
 				Ti.API.debug(url);
@@ -390,7 +404,7 @@ moreButton.addEventListener('click', function()
 					like = "Remove from Likes";
 					likedItImage.url = '../images/ilike_icon.png';
 					getLists();
-				    g_doneDialog.show();
+				    
 				}
 					
 				Ti.API.debug(url);
@@ -453,7 +467,7 @@ moreButton.addEventListener('click', function()
 					wantToRead = "Remove from Want it";
 					wantItImage.url = '../images/star_gold_256.png'
 					getLists();
-				    g_doneDialog.show();
+				    
 				}
 					
 				Ti.API.debug(url);
@@ -516,7 +530,7 @@ moreButton.addEventListener('click', function()
 					skimmed = "Remove from Skimmed it";
 					skimmedItImage.url = '../images/runningimg.jpg'
 					getLists();
-				    g_doneDialog.show();
+				    
 				}
 					
 				Ti.API.debug(url);

@@ -10,15 +10,17 @@ var g_messageDialog = Ti.UI.createAlertDialog({
 	message: 'There\'s an error.'
 });
 
-var spinnerButton = Titanium.UI.createButton({
-	systemButton:Titanium.UI.iPhone.SystemButton.SPINNER
-});
-
 function showMessageDialog(message) {
 	g_messageDialog.setMessage(message);
 	g_messageDialog.show();
 	
 }
+
+var spinnerButton = Titanium.UI.createButton({
+	systemButton:Titanium.UI.iPhone.SystemButton.SPINNER
+});
+
+
 
 win.addEventListener('open', function(e) {
 	Ti.API.info('in OPEN handler on manage_profile.js window');

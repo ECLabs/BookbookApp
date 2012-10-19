@@ -428,7 +428,6 @@ function loadData()
 		   	}
 			
 			updateView();
-		   	g_doneDialog.show();
 		   	return;
 	 	}
 	};
