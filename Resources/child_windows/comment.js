@@ -16,7 +16,7 @@ var tf = Titanium.UI.createTextField({
 
 var textfield = Titanium.UI.createTextField({  //This text field is never shown, it is hidden, but brings up the keyboard.
 	color:'#336699',
-	value:'Focus to see keyboard w/ toolbar',
+	value:'',
 	height:0,
 	width:0,
 	top:10,
@@ -25,6 +25,39 @@ var textfield = Titanium.UI.createTextField({  //This text field is never shown,
 	keyboardToolbar:[tf],
 	keyboardToolbarColor: '#999',	
 	keyboardToolbarHeight: 40
+});
+
+tf.addEventListener('return', function()
+{
+	var url = Ti.App.SERVICE_BASE_URL + 'book/'+bookObject.bookId+'/opinion';
+	var xhr = Titanium.Network.createHTTPClient();
+	xhr.setTimeout(1000); // 10 second timeout
+	xhr.onerror = function(e) {
+		Ti.API.info("An error has occurred: " + e);
+	}
+	xhr.onload = function() {
+	    var resp = this.responseText;  
+	    Ti.API.info(resp);
+	    
+	    var responseObject = eval('('+resp+')');
+	    if(responseObject.error) { // backend error message
+	    	showValidationErrorDialog(responseObject.error);
+	    }
+	    else { // successful
+	    		alert("Success!");
+	    		openKeyboard();
+	    		return;
+	    }
+	};
+
+
+	Ti.API.debug(url);
+	xhr.open('POST', url);
+	xhr.send({'jsondata':{
+		"text": tf.value,
+  		"bookId": bookObject.bookId,
+  		"userId": Ti.App.CurrentUser.userId
+	}}); 
 });
 
 var statView = Titanium.UI.createView({ 
@@ -69,5 +102,11 @@ statView.add(scrollView);
 statView.add(textfield);
 win.add(statView);
 
-textfield.fireEvent('focus');
-tf.fireEvent('focus');
+Titanium.UI.currentWindow.addEventListener('focus', openKeyboard);
+
+function openKeyboard()
+{
+	tf.value = '';
+	textfield.focus();
+	tf.focus();
+}
