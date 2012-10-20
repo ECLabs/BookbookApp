@@ -22,12 +22,6 @@ function showMessageDialog(message) {
 	
 }
 
-
-var backButton = Titanium.UI.createButton({
-    title:'Back',
-    style:Titanium.UI.iPhone.SystemButtonStyle.PLAIN
-});
-
 var checkinButton = Titanium.UI.createButton({
     title:'Check-In',
     style:Titanium.UI.iPhone.SystemButtonStyle.PLAIN,
@@ -43,20 +37,11 @@ checkinButton.addEventListener('click',function()
 				    fullscreen:false,
 				    navBarHidden:false,
 				    tabBarHidden:true,
-				    backButtonTitle:'test'
+				    backButtonTitle:'Back'
 				});
 				
 	checkInWin.bookObject = bookObject;
-	
-					tab = Ti.UI.createTab({
-					    title:"Doesn't matter",
-					    window: checkInWin
-					});
-					
-				tabGroup.addTab(tab);	
-				tabGroup.open();
-
-				checkInWin.open(); 
+	Titanium.UI.currentTab.open(checkInWin,{animated:true});
 });
 
 win.setRightNavButton(checkinButton);
@@ -219,27 +204,18 @@ var commentButton = Titanium.UI.createButton({
 
 commentButton.addEventListener('click',function()
 {
-	commentWin = Titanium.UI.createWindow({
+	var commentWin = Titanium.UI.createWindow({
 					url:'../child_windows/comment.js',  
 				    title:'Add Comment',
 				    barColor: '#777',
 				    fullscreen:false,
 				    navBarHidden:false,
 				    tabBarHidden:true,
-				    backButtonTitle:'test'
+				    backButtonTitle:'Back'
 				});
 				
 	commentWin.bookObject = bookObject;
-	
-					tab = Ti.UI.createTab({
-					    title:"Doesn't matter",
-					    window: commentWin
-					});
-					
-				tabGroup.addTab(tab);	
-				tabGroup.open();
-
-				commentWin.open(); 
+	Titanium.UI.currentTab.open(commentWin,{animated:true});
 });
 
 var moreButton = Titanium.UI.createButton({
@@ -619,14 +595,3 @@ statView.add(commentButton);
 statView.add(moreButton);
 statView.add(today);
 win.add(statView);
-
-
-Ti.App.addEventListener('closeCheckInTabGroup', function() {
-	tabGroup.removeTab(tab); //This deletes and creates a new tab for each selection
-	tabGroup.close();
-});
-
-Ti.App.addEventListener('closeCommentTabGroup', function() {
-	tabGroup.removeTab(tab); //This deletes and creates a new tab for each selection
-	tabGroup.close();
-});

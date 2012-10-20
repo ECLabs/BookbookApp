@@ -5,26 +5,6 @@ var REQUEST_TIMEOUT = Ti.App.REQUEST_TIMEOUT;
 
 var bookObject = Titanium.UI.currentWindow.bookObject;
 
-var backButton = Titanium.UI.createButton({
-    title:'Back',
-    style:Titanium.UI.iPhone.SystemButtonStyle.PLAIN
-});
-backButton.addEventListener('click',function()
-{
-	Titanium.API.debug("You clicked the button back button");
-	closeThisWindow();
-});
-win.setLeftNavButton(backButton);
-
-function closeThisWindow() {
-	/*
-	 * This event is caught by findBooks.js and results in closing the tabGroup that contains
-	 * this window.
-	 */
-	commentArea.blur();
-	Ti.App.fireEvent('closeCheckInTabGroup');
-}
-
 var statView = Titanium.UI.createView({ 
 			height:'auto', 
 			layout:'vertical',
@@ -182,7 +162,8 @@ checkinButton.addEventListener('click', function(e){
 	    	showValidationErrorDialog(responseObject.error);
 	    }
 	    else { // successful
-	    		closeThisWindow();
+	    		alert("Check-in Successful!");
+	    		win.close();
 	    		return;
 	    }
 	};
