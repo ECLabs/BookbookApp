@@ -1,6 +1,14 @@
 var win = Ti.UI.currentWindow;  
 win.layout = 'vertical'
 
+Titanium.UI.currentWindow.addEventListener('focus', reloadComments);
+
+function reloadComments()
+{
+	commentContents.data = [];
+	loadComments();
+}
+
 var tab;
 
 var REQUEST_TIMEOUT = Ti.App.REQUEST_TIMEOUT;
@@ -272,7 +280,6 @@ function getLists()
 				skimmedItImage.url = '../images/runningimg.jpg'
 			}
 		}
-		
 	}
 						
 	Ti.API.debug(url);
@@ -552,6 +559,98 @@ moreButton.addEventListener('click', function()
 	});
 });
 
+var commentContents = Ti.UI.createTableView({
+	separatorStyle:Ti.UI.iPhone.TableViewSeparatorStyle.NONE
+});
+
+function loadComments()
+{
+	var url = Ti.App.SERVICE_BASE_URL + 'book/'+bookObject.bookId+'/opinion';
+	var xhr = Titanium.Network.createHTTPClient();
+	xhr.setTimeout(1000); // 10 second timeout
+	xhr.onerror = function(e) {
+		Ti.API.info("An error has occurred: " + e);
+	}
+	xhr.onload = function() {
+	    var resp = this.responseText;  
+	    Ti.API.info(resp);
+	    
+	    var responseObject = eval('('+resp+')');
+	    if(responseObject.error) { // backend error message
+	    	showValidationErrorDialog(responseObject.error);
+	    }
+	    else { // successful
+	    		var tableRow = [];
+	    		
+	    		var offset = 0;
+	    		var i=0;
+	    		for(i=responseObject.length-1; i>=0; i--)
+	    		{
+	    			var commentView = Titanium.UI.createView({ 
+	    				layout:'verticle',
+	    				width:'100%',
+	    				height:Ti.UI.SIZE
+	    			});
+	    			
+	    			var userImage = Titanium.UI.createImageView({
+	    				height:40,
+	    				width:30,
+	    				left:4,
+	    				top:1,
+	    				image:responseObject[i].user.photoUrl
+	    			});
+	    			
+	    			var userNameText = Titanium.UI.createLabel({
+	    				text:responseObject[i].user.userName+" ",
+	    				color:'blue',
+	    				top:0,
+	    				left: 38,
+	    				font:{fontSize:12, fontStyle:'bold'}
+	    			});
+	    			
+	    			var x;
+	    			var spaces = '';
+	    			for(x=0; x<responseObject[i].user.userName.length; x++)
+	    			{
+	    				spaces += '  ';
+	    			}
+	    			
+	    			var commentText = Titanium.UI.createLabel({
+	    				text:spaces+''+responseObject[i].text+'\n\n',
+	    				font:{fontSize:12},
+	    				top:1,
+	    				left: 38
+	    			});
+	    			
+	    			var createDate = Titanium.UI.createLabel({
+	    				text:responseObject[i].createDate,
+	    				font:{fontSize:10},
+	    				left:38,
+	    				height:22,
+	    				bottom: 0
+	    			});
+	    			
+	    			commentView.add(userImage);
+	    			commentView.add(userNameText);
+	    			commentView.add(commentText);
+	    			commentView.add(createDate);
+	    			
+	    			var row = Titanium.UI.createTableViewRow({});
+	    			row.add(commentView);
+	    			tableRow[offset++] = row;
+	    		}
+	    		
+	    		commentContents.data = tableRow;
+	    		return;
+	    }
+	};
+
+
+	Ti.API.debug(url);
+	xhr.open('GET', url);
+	xhr.send(); 
+}
+
 var today = Titanium.UI.createLabel({
 	text:"  Today",
 	top:3,
@@ -594,4 +693,5 @@ statView.add(recentActivity);
 statView.add(commentButton);
 statView.add(moreButton);
 statView.add(today);
+statView.add(commentContents);
 win.add(statView);

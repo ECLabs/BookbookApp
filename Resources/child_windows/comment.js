@@ -5,11 +5,9 @@ win.top = 0;
 var firstTime = true;
 
 function reload()
-{
-	
+{	
 		commentContents.data = [];
 		loadComments();
-	
 }
 	
 var bookObject = Titanium.UI.currentWindow.bookObject;
@@ -57,7 +55,6 @@ tf.addEventListener('return', function()
 	    else { // successful
 	    		openKeyboard();
 	    		reload();
-	    		alert("Success!");
 	    		return;
 	    }
 	};
@@ -175,7 +172,7 @@ function loadComments()
 	    			
 	    			var createDate = Titanium.UI.createLabel({
 	    				text:responseObject[i].createDate,
-	    				font:{fontSize:12},
+	    				font:{fontSize:10},
 	    				left:38,
 	    				height:22,
 	    				bottom: 0
