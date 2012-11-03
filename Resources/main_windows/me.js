@@ -187,20 +187,21 @@ function loadData()
 	numWantToRead = 0;
 	numHaveRead = 0;
 	numSkimmed = 0;
-	
+
 	var url = Ti.App.SERVICE_BASE_URL + 'list/userId-'+Ti.App.CurrentUser.userId;
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.setTimeout(REQUEST_TIMEOUT); // 10 second timeout
 	xhr.onerror = function(e) {
 		Ti.API.info(e);
+		Ti.API.info("ERROR");
 	}
 	xhr.onload = function() {
 	    var resp = JSON.parse(this.responseText);  
 	    var length = Object.keys(resp).length;
 	    Ti.API.info(resp);
-	   
+
 	    if(resp == '') { 
-	    	//No data do nothing
+	    	updateView();
 	    }
 	    else { // successful
 	    	for(i=0; i<length; i++)
@@ -497,9 +498,9 @@ statView1.add(profileLabel);
 statView1.add(profileHorzView);
 
 if(numLike==0){likeHorzView.height = 5;}
-else if(numWantToRead==0){wantToReadHorzView.height = 5;}
-else if(numHaveRead==0){haveReadHorzView.height = 5;}
-else if(numSkimmed==0){skimmedHorzView.height = 5;}
+if(numWantToRead==0){wantToReadHorzView.height = 5;}
+if(numHaveRead==0){haveReadHorzView.height = 5;}
+if(numSkimmed==0){skimmedHorzView.height = 5;}
 
 statView1.add(likeLabel);
 statView1.add(likeHorzView);
@@ -526,7 +527,7 @@ function closeThisWindow() {
 profileName.text = Ti.App.CurrentUser.fullName;
 bioLabel.text = Ti.App.CurrentUser.aboutMe;
 locationLabel.text = Ti.App.CurrentUser.location;
-if(Ti.App.CurrentUser.photoUrl != ''){profilePic.image = Ti.App.CurrentUser.photoUrl;}
+if((Ti.App.CurrentUser.photoUrl != '') && (Ti.App.CurrentUser.photoUrl != '<null>')){profilePic.image = Ti.App.CurrentUser.photoUrl;}
 
 Ti.App.addEventListener('saveProfileEvent', function() {
 	Ti.API.info("in eventListener for 'saveProfileEvent'");

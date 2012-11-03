@@ -326,4 +326,4 @@ nameText.value = currUser.fullName;
 bioArea.value = currUser.aboutMe;
 userId.value = currUser.userId;
 locationText.value = currUser.location;
-if(currUser.photoUrl != ''){profilePicManage.image = currUser.photoUrl;}
+if((currUser.photoUrl != '') && (currUser.photoUrl != '<null>')){profilePicManage.image = currUser.photoUrl;}
