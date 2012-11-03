@@ -104,6 +104,8 @@ var imageView = Titanium.UI.createImageView({
     url:'../images/blank_avatar.gif'
 });
 
+g_profileImage = Ti.Utils.base64encode(imageView.toBlob()).toString();
+
 // create table view event listener
 // opens photo gallery to allow user to select avatar photo.
 row.addEventListener('click', function(e)

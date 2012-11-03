@@ -174,7 +174,7 @@ function loadComments()
 	    			});
 	    			
 	    			var createDate = Titanium.UI.createLabel({
-	    				text:responseObject[0].book.createDate,
+	    				text:responseObject[i].createDate,
 	    				font:{fontSize:12},
 	    				left:38,
 	    				height:22,
