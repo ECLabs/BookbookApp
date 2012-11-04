@@ -125,6 +125,7 @@ function loadComments()
 	    var responseObject = eval('('+resp+')');
 	    if(responseObject.error) { // backend error message
 	    	showValidationErrorDialog(responseObject.error);
+	    	openKeyboard();
 	    }
 	    else { // successful
 	    		var tableRow = [];
@@ -201,7 +202,6 @@ function loadComments()
 	    		}
 	    		firstTime = false;
 	    		openKeyboard();
-	    		
 	    		return;
 	    }
 	};
