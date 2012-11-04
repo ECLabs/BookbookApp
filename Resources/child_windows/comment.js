@@ -105,7 +105,7 @@ var scrollView = Ti.UI.createScrollView({
 
 var commentContents = Ti.UI.createTableView({
 	backgroundColor: '#CCC',
-	height: '40%',
+	height: '35%',
 	top: 0
 });
 
