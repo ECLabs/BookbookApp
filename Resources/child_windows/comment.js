@@ -2,7 +2,6 @@ var win = Ti.UI.currentWindow;
 win.layout = 'vertical';
 win.height = "40%";
 win.top = 0;
-var firstTime = true;
 
 function reload()
 {	
@@ -108,6 +107,14 @@ var commentContents = Ti.UI.createTableView({
 	backgroundColor: '#CCC'
 });
 
+
+// add everything to the window
+scrollView.add(commentContents);
+statView.add(title);
+statView.add(scrollView);
+statView.add(textfield);
+win.add(statView);
+
 Titanium.UI.currentWindow.addEventListener('focus', loadComments);
 
 function loadComments()
@@ -190,17 +197,6 @@ function loadComments()
 	    		}
 	    		
 	    		commentContents.data = tableRow;
-	    		
-	    		if(firstTime)
-	    		{
-					scrollView.add(commentContents);
-					
-					statView.add(title);
-					statView.add(scrollView);
-					statView.add(textfield);
-		    		win.add(statView);
-	    		}
-	    		firstTime = false;
 	    		openKeyboard();
 	    		return;
 	    }
