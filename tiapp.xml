@@ -13,7 +13,7 @@
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <sdk-version>2.1.2.GA</sdk-version>
+    <sdk-version>2.1.3.GA</sdk-version>
     <id>com.evanschambers.bookbook</id>
     <name>BookUp</name>
     <version>1.0</version>
