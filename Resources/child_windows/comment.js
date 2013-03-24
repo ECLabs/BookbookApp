@@ -1,6 +1,6 @@
 var win = Ti.UI.currentWindow;  
 win.layout = 'vertical';
-win.height = "40%";
+win.backgroundColor = '#CCC';
 win.top = 0;
 
 function reload()
@@ -104,7 +104,9 @@ var scrollView = Ti.UI.createScrollView({
 });
 
 var commentContents = Ti.UI.createTableView({
-	backgroundColor: '#CCC'
+	backgroundColor: '#CCC',
+	height: '35%',
+	top: 0
 });
 
 
